@@ -1,0 +1,153 @@
+<div class="about-page">
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1 class="hero-title">About The Game Loop</h1>
+        <p class="hero-subtitle">
+          Empowering the next generation of game developers with cutting-edge tutorials, 
+          industry insights, and a supportive community.
+        </p>
+      </div>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="mission">
+      <div class="mission-content">
+        <div class="mission-text">
+          <h2 class="section-title">Our Mission</h2>
+          <p class="mission-description">
+            The Game Loop was born from a simple belief: every great game developer deserves access to 
+            high-quality education and a supportive community. Whether you're just starting your journey 
+            or you're a seasoned veteran looking to expand your skills, we're here to help you level up.
+          </p>
+          <p class="mission-description">
+            We provide comprehensive tutorials, industry insights, and practical resources that bridge 
+            the gap between theory and real-world game development. Our content is created by industry 
+            professionals who understand the challenges you face.
+          </p>
+        </div>
+        <div class="mission-visual">
+          <div class="code-block">
+            <div class="code-header">
+              <div class="code-dots">
+                <span></span><span></span><span></span>
+              </div>
+              <span class="code-title">GameLoop.cs</span>
+            </div>
+            <div class="code-content">
+              <div class="code-line"><span class="keyword">public class</span> <span class="class">GameLoop</span></div>
+              <div class="code-line">{{ '{' }}</div>
+              <div class="code-line">    <span class="keyword">void</span> <span class="method">Start</span>()</div>
+              <div class="code-line">    {{ '{' }}</div>
+              <div class="code-line">        <span class="comment">// Begin your journey</span></div>
+              <div class="code-line">        <span class="method">LearnGameDev</span>();</div>
+              <div class="code-line">    {{ '}' }}</div>
+              <div class="code-line">{{ '}' }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+      <div class="stats-grid">
+        @for (stat of stats; track stat.label) {
+          <div class="stat-card">
+            <div class="stat-icon">{{ stat.icon }}</div>
+            <div class="stat-value">{{ stat.value }}</div>
+            <div class="stat-label">{{ stat.label }}</div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team">
+      <h2 class="section-title">Meet Our Team</h2>
+      <p class="section-subtitle">
+        A passionate group of industry veterans dedicated to sharing their knowledge
+      </p>
+      
+      <div class="team-grid">
+        @for (member of teamMembers; track member.name) {
+          <div class="team-card">
+            <div class="member-avatar">
+              <div class="avatar-placeholder">
+                <span class="avatar-initial">{{ member.name.charAt(0) }}</span>
+              </div>
+            </div>
+            <div class="member-info">
+              <h3 class="member-name">{{ member.name }}</h3>
+              <p class="member-role">{{ member.role }}</p>
+              <p class="member-bio">{{ member.bio }}</p>
+              <div class="member-expertise">
+                @for (skill of member.expertise; track skill) {
+                  <span class="skill-tag">{{ skill }}</span>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values">
+      <h2 class="section-title">What We Believe In</h2>
+      
+      <div class="values-grid">
+        <div class="value-card">
+          <div class="value-icon">🎯</div>
+          <h3 class="value-title">Quality First</h3>
+          <p class="value-description">
+            Every piece of content is carefully crafted and reviewed by industry professionals 
+            to ensure accuracy and practical value.
+          </p>
+        </div>
+        
+        <div class="value-card">
+          <div class="value-icon">🌍</div>
+          <h3 class="value-title">Accessible Learning</h3>
+          <p class="value-description">
+            Game development education should be accessible to everyone, regardless of 
+            background or experience level.
+          </p>
+        </div>
+        
+        <div class="value-card">
+          <div class="value-icon">🤝</div>
+          <h3 class="value-title">Community Driven</h3>
+          <p class="value-description">
+            The best learning happens in a supportive community. We foster collaboration 
+            and knowledge sharing among developers.
+          </p>
+        </div>
+        
+        <div class="value-card">
+          <div class="value-icon">🚀</div>
+          <h3 class="value-title">Innovation Focus</h3>
+          <p class="value-description">
+            We stay at the forefront of game development technology and share the latest 
+            tools and techniques with our community.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+      <div class="cta-content">
+        <h2 class="cta-title">Ready to Level Up Your Skills?</h2>
+        <p class="cta-description">
+          Join thousands of developers who are already part of The Game Loop community
+        </p>
+        <div class="cta-buttons">
+          <button class="cta-btn primary" [routerLink]="['/tutorials']">Start Learning</button>
+          <button class="cta-btn secondary" [routerLink]="['/articles']">Read Articles</button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

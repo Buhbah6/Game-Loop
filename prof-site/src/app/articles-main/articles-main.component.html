@@ -1,0 +1,83 @@
+<div class="articles-page">
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1 class="hero-title">Game Development Articles</h1>
+        <p class="hero-subtitle">Deep dive into game development with expert insights, tutorials, and industry best practices</p>
+      </div>
+    </section>
+
+    <!-- Filter Categories -->
+    <section class="filters">
+      <div class="category-filters">
+        @for (category of categories; track category) {
+          <button 
+            class="filter-btn"
+            [class.active]="selectedCategory === category"
+            (click)="selectCategory(category)">
+            {{ category }}
+          </button>
+        }
+      </div>
+    </section>
+
+    <!-- Articles Grid -->
+    <section class="articles-grid">
+      @for (article of filteredArticles; track article.id) {
+        <article 
+          class="article-card"
+          [class.featured]="article.featured"
+          [routerLink]="['/articles', article.id]">
+          
+          <div class="article-image">
+            @if (article.category === 'Programming') {
+              <div class="code-preview">
+                <div class="code-line">function gameLoop() {{ '{' }}</div>
+                <div class="code-line">  update();</div>
+                <div class="code-line">  render();</div>
+                <div class="code-line">{{ '}' }}</div>
+              </div>
+            } @else {
+              <div class="image-placeholder">
+                <span class="category-icon">
+                  @switch (article.category) {
+                    @case ('Game Design') { 🎮 }
+                    @case ('Art') { 🎨 }
+                    @case ('Marketing') { 📈 }
+                    @default { 💡 }
+                  }
+                </span>
+              </div>
+            }
+          </div>
+
+          <div class="article-content">
+            <div class="article-tags">
+              <span class="tag tag-category">{{ article.category }}</span>
+              @if (article.featured) {
+                <span class="tag tag-featured">Featured</span>
+              }
+            </div>
+            
+            <h2 class="article-title">{{ article.title }}</h2>
+            
+            <p class="article-excerpt">{{ article.excerpt }}</p>
+            
+            <div class="article-meta">
+              <span class="author">By {{ article.author }}</span>
+              <span class="date">&#x1F4C5; {{ article.date }}</span>
+              <span class="read-time">&#x23F1; {{ article.readTime }}</span>
+            </div>
+            
+            <div class="article-tags-list">
+              @for (tag of article.tags; track tag) {
+                <span class="tag tag-small">{{ tag }}</span>
+              }
+            </div>
+          </div>
+        </article>
+      }
+    </section>
+  </div>
+</div>

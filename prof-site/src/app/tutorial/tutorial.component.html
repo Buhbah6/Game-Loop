@@ -1,0 +1,232 @@
+@if (tutorial) {
+<div class="tutorial-detail-page">
+  <div class="container">
+    <!-- Tutorial Header -->
+    <header class="tutorial-header">
+      <div class="breadcrumb">
+        <a routerLink="/tutorials" class="breadcrumb-link">Tutorials</a>
+        <span class="breadcrumb-separator">→</span>
+        <span class="breadcrumb-current">{{ tutorial.category }}</span>
+      </div>
+      
+      <div class="tutorial-hero">
+        <div class="tutorial-info">
+          <div class="tutorial-meta">
+            <span class="difficulty-badge" [style.background-color]="getDifficultyColor()">{{ tutorial.difficulty }}</span>
+            <span class="category-badge">{{ tutorial.category }}</span>
+          </div>
+          
+          <h1 class="tutorial-title">{{ tutorial.title }}</h1>
+          <p class="tutorial-description">{{ tutorial.description }}</p>
+          
+          <div class="tutorial-stats">
+            <div class="stat-group">
+              <span class="stat">
+                <span class="icon">⏱</span>
+                {{ tutorial.duration }}
+              </span>
+              <span class="stat">
+                <span class="icon">👁</span>
+                {{ tutorial.views }} views
+              </span>
+              <span class="stat">
+                <span class="icon">❤️</span>
+                {{ tutorial.likes }} likes
+              </span>
+            </div>
+            
+            <div class="rating">
+              <div class="stars">
+                @for (star of [1,2,3,4,5]; track star) {
+                  <span class="star" [class.filled]="star <= tutorial.rating">★</span>
+                }
+              </div>
+              <span class="rating-text">{{ tutorial.rating }} ({{ tutorial.totalRatings }} reviews)</span>
+            </div>
+          </div>
+          
+          <div class="instructor-info">
+            <div class="instructor-avatar">
+              <span class="avatar-text">{{ tutorial.instructorAvatar }}</span>
+            </div>
+            <div class="instructor-details">
+              <h3 class="instructor-name">{{ tutorial.instructor }}</h3>
+              <p class="instructor-bio">{{ tutorial.instructorBio }}</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="tutorial-actions">
+          <button class="primary-btn" (click)="startTutorial()">
+            <span class="play-icon">▶</span>
+            Start Tutorial
+          </button>
+          
+          <div class="secondary-actions">
+            <button class="action-btn bookmark-btn">
+              <span class="icon">🔖</span>
+              Bookmark
+            </button>
+            <button class="action-btn share-btn">
+              <span class="icon">🔗</span>
+              Share
+            </button>
+          </div>
+          
+          @if (getCompletionPercentage() > 0) {
+            <div class="progress-section">
+              <div class="progress-header">
+                <span>Progress: {{ getCompletionPercentage() }}%</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" [style.width.%]="getCompletionPercentage()"></div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </header>
+
+    <div class="content-layout">
+      <!-- Main Content -->
+      <main class="tutorial-content">
+        <!-- Tutorial Curriculum -->
+        <section class="curriculum-section">
+          <h2>Tutorial Content</h2>
+          <div class="chapters-list">
+            @for (chapter of tutorial.chapters; track $index) {
+              <div class="chapter-item" [class.completed]="chapter.completed">
+                <div class="chapter-header" (click)="toggleChapterComplete($index)">
+                  <div class="chapter-number">{{ $index + 1 }}</div>
+                  <div class="chapter-info">
+                    <h3 class="chapter-title">{{ chapter.title }}</h3>
+                    <p class="chapter-description">{{ chapter.description }}</p>
+                  </div>
+                  <div class="chapter-meta">
+                    <span class="chapter-duration">{{ chapter.duration }}</span>
+                    <div class="completion-status">
+                      @if (chapter.completed) {
+                        <span class="completed-icon">✓</span>
+                      } @else {
+                        <span class="play-icon">▶</span>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+        
+        <!-- What You'll Learn -->
+        <section class="learning-section">
+          <h2>What You'll Learn</h2>
+          <ul class="learning-list">
+            @for (item of tutorial.whatYouLearn; track item) {
+              <li class="learning-item">
+                <span class="check-icon">✓</span>
+                {{ item }}
+              </li>
+            }
+          </ul>
+        </section>
+        
+        <!-- Requirements -->
+        <section class="requirements-section">
+          <h2>Requirements</h2>
+          <ul class="requirements-list">
+            @for (req of tutorial.requirements; track req) {
+              <li class="requirement-item">
+                <span class="bullet">•</span>
+                {{ req }}
+              </li>
+            }
+          </ul>
+        </section>
+        
+        <!-- Tags -->
+        <section class="tags-section">
+          <h2>Tags</h2>
+          <div class="tags-list">
+            @for (tag of tutorial.tags; track tag) {
+              <span class="tag">{{ tag }}</span>
+            }
+          </div>
+        </section>
+      </main>
+
+      <!-- Sidebar -->
+      <aside class="tutorial-sidebar">
+        <!-- Quick Stats -->
+        <div class="sidebar-section stats-card">
+          <h3>Tutorial Stats</h3>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <span class="stat-value">{{ tutorial.chapters?.length || 0 }}</span>
+              <span class="stat-label">Chapters</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">{{ tutorial.duration }}</span>
+              <span class="stat-label">Duration</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">{{ tutorial.difficulty }}</span>
+              <span class="stat-label">Level</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-value">{{ tutorial.rating }}</span>
+              <span class="stat-label">Rating</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Related Tutorials -->
+        <div class="sidebar-section">
+          <h3>Related Tutorials</h3>
+          <div class="related-tutorials">
+            @for (relatedTutorial of relatedTutorials; track relatedTutorial.id) {
+              <div class="related-tutorial" (click)="navigateToTutorial(relatedTutorial.id)">
+                <div class="related-thumbnail">
+                  <div class="thumbnail-placeholder"></div>
+                  <span class="play-overlay">▶</span>
+                </div>
+                <div class="related-info">
+                  <h4 class="related-title">{{ relatedTutorial.title }}</h4>
+                  <div class="related-meta">
+                    <span class="related-instructor">{{ relatedTutorial.instructor }}</span>
+                    <span class="related-duration">{{ relatedTutorial.duration }}</span>
+                  </div>
+                  <div class="related-difficulty" [style.color]="getDifficultyColor()">
+                    {{ relatedTutorial.difficulty }}
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+        
+        <!-- Newsletter -->
+        <div class="sidebar-section newsletter">
+          <h3>Get More Tutorials</h3>
+          <p>Subscribe to get notified about new tutorials and courses.</p>
+          <form class="newsletter-form">
+            <input type="email" placeholder="Enter your email" class="email-input">
+            <button type="submit" class="subscribe-btn">Subscribe</button>
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+} @else {
+<!-- Loading State -->
+<div class="loading-state">
+  <div class="container">
+    <div class="loading-content">
+      <h2>Loading tutorial...</h2>
+      <p>If this takes too long, the tutorial might not exist.</p>
+      <button routerLink="/tutorials" class="back-btn">← Back to Tutorials</button>
+    </div>
+  </div>
+</div>
+}

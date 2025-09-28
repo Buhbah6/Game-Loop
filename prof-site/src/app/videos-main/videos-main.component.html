@@ -1,0 +1,91 @@
+<div class="videos-page">
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1 class="hero-title">&#x1F4FA; Game Development Videos</h1>
+        <p class="hero-subtitle">Watch comprehensive video tutorials and courses from industry experts</p>
+      </div>
+    </section>
+
+    <!-- Filter Categories -->
+    <section class="filters">
+      <div class="category-filters">
+        @for (category of categories; track category) {
+          <button 
+            class="filter-btn"
+            [class.active]="selectedCategory === category"
+            (click)="selectCategory(category)">
+            {{ category }}
+          </button>
+        }
+      </div>
+    </section>
+
+    <!-- Featured Video -->
+    @if (filteredVideos.length > 0 && filteredVideos[0].featured) {
+      <section class="featured-video">
+        <div class="video-card featured" [routerLink]="['/videos', filteredVideos[0].id]">
+          <div class="video-thumbnail">
+            <div class="thumbnail-placeholder">
+              <div class="play-button-large">&#x25B6;</div>
+              <div class="video-duration">{{ filteredVideos[0].duration }}</div>
+              <div class="featured-badge">Featured</div>
+            </div>
+          </div>
+          <div class="video-info">
+            <h2 class="video-title">{{ filteredVideos[0].title }}</h2>
+            <p class="video-description">{{ filteredVideos[0].description }}</p>
+            <div class="video-meta">
+              <span class="creator">{{ filteredVideos[0].creator }}</span>
+              <span class="stats">{{ formatViews(filteredVideos[0].views) }} • {{ filteredVideos[0].uploadDate }}</span>
+            </div>
+            <div class="video-tags">
+              @for (tag of filteredVideos[0].tags; track tag) {
+                <span class="tag">{{ tag }}</span>
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+    }
+
+    <!-- Videos Grid -->
+    <section class="videos-grid">
+      @for (video of filteredVideos; track video.id; let i = $index) {
+        @if (!video.featured || i > 0) {
+          <div class="video-card" [routerLink]="['/videos', video.id]">
+            <div class="video-thumbnail">
+              <div class="thumbnail-placeholder">
+                <div class="play-button">&#x25B6;</div>
+                <div class="video-duration">{{ video.duration }}</div>
+              </div>
+              <div class="category-badge" [class]="'badge-' + video.category.toLowerCase().replace(' ', '-')">
+                {{ video.category }}
+              </div>
+            </div>
+            
+            <div class="video-info">
+              <h3 class="video-title">{{ video.title }}</h3>
+              <p class="video-description">{{ video.description }}</p>
+              
+              <div class="video-meta">
+                <span class="creator">{{ video.creator }}</span>
+                <div class="stats">
+                  <span class="views">&#x1F441; {{ video.views }}</span>
+                  <span class="date">&#x1F4C5; {{ video.uploadDate }}</span>
+                </div>
+              </div>
+              
+              <div class="video-tags">
+                @for (tag of video.tags; track tag) {
+                  <span class="tag">{{ tag }}</span>
+                }
+              </div>
+            </div>
+          </div>
+        }
+      }
+    </section>
+  </div>
+</div>

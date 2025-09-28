@@ -1,0 +1,192 @@
+<!-- Main Content -->
+<main class="main">
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1 class="hero-title">Latest Game Development News</h1>
+        <p class="hero-subtitle">Stay up to date with the latest insights, tutorials, and industry trends</p>
+      </div>
+    </section>
+
+    <!-- Content Grid -->
+    <div class="content-grid">
+      <!-- Left Column - Featured Article -->
+      <div class="main-content">
+        <article class="featured-article" routerLink="/articles/1">
+          <div class="article-image">
+            <div class="code-preview">
+              <div class="code-line">void Update() {{ '{' }}</div>
+              <div class="code-line">  if (Input.GetMouseButtonDown(0)) {{ '{' }}</div>
+              <div class="code-line">    // Handle click</div>
+              <div class="code-line">  {{ '}' }}</div>
+              <div class="code-line">{{ '}' }}</div>
+            </div>
+          </div>
+          <div class="article-content">
+            <div class="article-tags">
+              <span class="tag tag-featured">Featured</span>
+              <span class="tag tag-game-design">Game Design</span>
+            </div>
+            <h2 class="article-title">The Psychology of Player Engagement: What Keeps Gamers Coming Back</h2>
+            <p class="article-excerpt">
+              Explore the fundamental principles that keep players hooked and how to implement them 
+              in your game design. From reward systems...
+            </p>
+            <div class="article-meta">
+              <span class="article-date">&#x1F4C5; Dec 15</span>
+              <span class="article-read-time">&#x23F1; 8 min</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Article Grid -->
+        <div class="article-grid">
+          <article class="article-card" routerLink="/articles/2">
+            <div class="article-image small">
+              <div class="image-placeholder purple"></div>
+            </div>
+            <div class="article-content">
+              <div class="article-tags">
+                <span class="tag tag-world-building">World Building</span>
+              </div>
+              <h3 class="article-title">Building Immersive Worlds: A Designer's Guide</h3>
+              <p class="article-excerpt">
+                Learn the secrets behind creating compelling game worlds that players never want to leave.
+              </p>
+              <div class="article-meta">
+                <span class="article-date">&#x1F4C5; Dec 12</span>
+                <span class="article-read-time">&#x23F1; 12 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="article-card" routerLink="/articles/3">
+            <div class="article-image small">
+              <div class="code-preview small">
+                <div class="code-line">balance = 0.5f;</div>
+                <div class="code-line">difficulty++;</div>
+              </div>
+            </div>
+            <div class="article-content">
+              <div class="article-tags">
+                <span class="tag tag-game-balance">Game Balance</span>
+              </div>
+              <h3 class="article-title">The Art of Balancing Game Mechanics</h3>
+              <p class="article-excerpt">
+                Discover how to create perfectly balanced gameplay that challenges without frustrating players.
+              </p>
+              <div class="article-meta">
+                <span class="article-date">&#x1F4C5; Dec 10</span>
+                <span class="article-read-time">&#x23F1; 6 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="article-card">
+            <div class="article-image small">
+              <div class="code-preview small">
+                <div class="code-line">shader.SetFloat();</div>
+                <div class="code-line">material.color = new Color();</div>
+              </div>
+            </div>
+            <div class="article-content">
+              <div class="article-tags">
+                <span class="tag tag-marketing">Marketing</span>
+              </div>
+              <h3 class="article-title">Indie Game Marketing Strategies That Actually Work</h3>
+              <p class="article-excerpt">
+                Essential marketing tips for indie developers to get their games noticed in a crowded market.
+              </p>
+              <div class="article-meta">
+                <span class="article-date">&#x1F4C5; Dec 1</span>
+                <span class="article-read-time">&#x23F1; 15 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="article-card">
+            <div class="article-image small">
+              <div class="image-placeholder purple"></div>
+            </div>
+            <div class="article-content">
+              <div class="article-tags">
+                <span class="tag tag-programming">Programming</span>
+              </div>
+              <h3 class="article-title">Advanced Shader Techniques for Indie Developers</h3>
+              <p class="article-excerpt">
+                Unlock the power of custom shaders to create stunning visual effects on a budget.
+              </p>
+              <div class="article-meta">
+                <span class="article-date">&#x1F4C5; Nov 28</span>
+                <span class="article-read-time">&#x23F1; 20 min</span>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+
+      <!-- Right Sidebar - Latest Tutorials -->
+      <aside class="sidebar">
+        <div class="sidebar-section">
+          <h2 class="sidebar-title"><span class="code-icon">&#x1F4BB;</span> Latest Tutorials</h2>
+          
+          <article class="tutorial-card" routerLink="/tutorials/1">
+            <div class="tutorial-image">
+              <div class="image-placeholder purple"></div>
+            </div>
+            <div class="tutorial-content">
+              <div class="tutorial-tags">
+                <span class="tag tag-unity">Unity</span>
+                <span class="tag tag-new">New</span>
+              </div>
+              <h3 class="tutorial-title">Unity 2D Game Development Masterclass</h3>
+              <div class="tutorial-meta">
+                <span class="tutorial-date">&#x1F4C5; Dec 8</span>
+                <span class="tutorial-duration">&#x23F1; 45 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="tutorial-card" routerLink="/tutorials/2">
+            <div class="tutorial-image">
+              <div class="code-preview small">
+                <div class="code-line">shader.SetFloat();</div>
+              </div>
+            </div>
+            <div class="tutorial-content">
+              <div class="tutorial-tags">
+                <span class="tag tag-graphics">Graphics</span>
+              </div>
+              <h3 class="tutorial-title">Advanced Shader Programming in Unity</h3>
+              <div class="tutorial-meta">
+                <span class="tutorial-date">&#x1F4C5; Dec 5</span>
+                <span class="tutorial-duration">&#x23F1; 38 min</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="tutorial-card" routerLink="/tutorials/3">
+            <div class="tutorial-image">
+              <div class="image-placeholder purple"></div>
+            </div>
+            <div class="tutorial-content">
+              <div class="tutorial-tags">
+                <span class="tag tag-programming">Programming</span>
+              </div>
+              <h3 class="tutorial-title">Complete C# Programming for Games</h3>
+              <div class="tutorial-meta">
+                <span class="tutorial-date">&#x1F4C5; Dec 3</span>
+                <span class="tutorial-duration">&#x23F1; 28 min</span>
+              </div>
+            </div>
+          </article>
+
+          <div class="view-all">
+            <a routerLink="/tutorials" class="view-all-link">&#x1F4BB; View All Tutorials →</a>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </div>
+</main>

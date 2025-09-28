@@ -1,0 +1,94 @@
+<div class="tutorials-page">
+  <div class="container">
+    <!-- Hero Section -->
+    <section class="hero">
+      <div class="hero-content">
+        <h1 class="hero-title">&#x1F4BB; Game Development Tutorials</h1>
+        <p class="hero-subtitle">Step-by-step tutorials to master game development skills from beginner to advanced level</p>
+      </div>
+    </section>
+
+    <!-- Filters -->
+    <section class="filters">
+      <div class="filter-group">
+        <label>Category:</label>
+        <div class="filter-buttons">
+          @for (category of categories; track category) {
+            <button 
+              class="filter-btn"
+              [class.active]="selectedCategory === category"
+              (click)="selectCategory(category)">
+              {{ category }}
+            </button>
+          }
+        </div>
+      </div>
+      
+      <div class="filter-group">
+        <label>Difficulty:</label>
+        <div class="filter-buttons">
+          @for (difficulty of difficulties; track difficulty) {
+            <button 
+              class="filter-btn"
+              [class.active]="selectedDifficulty === difficulty"
+              (click)="selectDifficulty(difficulty)">
+              {{ difficulty }}
+            </button>
+          }
+        </div>
+      </div>
+    </section>
+
+    <!-- Tutorials Grid -->
+    <section class="tutorials-grid">
+      @for (tutorial of filteredTutorials; track tutorial.id) {
+        <div 
+          class="tutorial-card"
+          [class.featured]="tutorial.featured"
+          [routerLink]="['/tutorials', tutorial.id]">
+          
+          <div class="tutorial-image">
+            <div class="tutorial-overlay">
+              <div class="play-button">&#x25B6;</div>
+              <div class="tutorial-info">
+                <span class="lesson-count">{{ tutorial.lessons }} lessons</span>
+                <span class="duration">{{ tutorial.duration }}</span>
+              </div>
+            </div>
+            <div class="category-badge" [class]="'badge-' + tutorial.category.toLowerCase()">
+              {{ tutorial.category }}
+            </div>
+            <div class="difficulty-badge" [class]="'difficulty-' + tutorial.difficulty.toLowerCase()">
+              {{ tutorial.difficulty }}
+            </div>
+          </div>
+
+          <div class="tutorial-content">
+            <div class="tutorial-meta">
+              <span class="instructor">By {{ tutorial.instructor }}</span>
+              <span class="date">&#x1F4C5; {{ tutorial.date }}</span>
+            </div>
+            
+            <h3 class="tutorial-title">{{ tutorial.title }}</h3>
+            
+            <p class="tutorial-description">{{ tutorial.description }}</p>
+            
+            <div class="tutorial-tags">
+              @for (tag of tutorial.tags; track tag) {
+                <span class="tag">{{ tag }}</span>
+              }
+            </div>
+            
+            <div class="tutorial-footer">
+              <div class="stats">
+                <span class="stat">&#x1F4DA; {{ tutorial.lessons }} lessons</span>
+                <span class="stat">&#x23F1; {{ tutorial.duration }}</span>
+              </div>
+              <button class="start-btn">Start Tutorial</button>
+            </div>
+          </div>
+        </div>
+      }
+    </section>
+  </div>
+</div>

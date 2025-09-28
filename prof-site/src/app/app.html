@@ -1,0 +1,100 @@
+<!-- Header -->
+<header class="header">
+  <div class="container">
+    <div class="header-content">
+      <div class="logo" [routerLink]="['/']">
+        <div class="logo-icon">&#x1F3AE;</div>
+        <span class="logo-text">The Game Loop</span>
+      </div>
+      
+      <!-- Desktop Navigation -->
+      <nav class="nav" [class.mobile-nav-open]="isMobileMenuOpen()">
+        <a routerLink="/" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">Home</a>
+        <a routerLink="/articles" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">Articles</a>
+        <a routerLink="/tutorials" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">Tutorials</a>
+        <a routerLink="/videos" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">Videos</a>
+        <a routerLink="/about" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">About</a>
+      </nav>
+      
+      <!-- Mobile Menu Toggle -->
+      <div class="mobile-menu-toggle" [class.active]="isMobileMenuOpen()" (click)="toggleMobileMenu()">
+        <div class="hamburger-line"></div>
+        <div class="hamburger-line"></div>
+        <div class="hamburger-line"></div>
+      </div>
+      
+      <div class="search-icon">&#x1F50D;</div>
+    </div>
+  </div>
+  
+  <!-- Mobile Overlay -->
+  <div class="mobile-overlay" [class.active]="isMobileMenuOpen()" (click)="closeMobileMenu()"></div>
+</header>
+
+<!-- Router Outlet for Page Content -->
+<router-outlet></router-outlet>
+
+<!-- Footer -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-content">
+      <div class="footer-brand">
+        <div class="logo">
+          <div class="logo-icon">&#x1F3AE;</div>
+          <span class="logo-text">The Game Loop</span>
+        </div>
+        <p class="footer-description">
+          Empowering game developers with insights, tutorials, and creative inspiration to build the next generation of amazing games.
+        </p>
+        <div class="social-links">
+          <a href="#" class="social-link">&#x1F4F1;</a>
+          <a href="#" class="social-link">&#x1F426;</a>
+          <a href="#" class="social-link">&#x1F4FA;</a>
+          <a href="#" class="social-link">&#x2709;&#xFE0F;</a>
+        </div>
+      </div>
+      
+      <div class="footer-section">
+        <h3 class="footer-title">Content</h3>
+        <ul class="footer-links">
+          <li><a routerLink="/articles">Latest Articles</a></li>
+          <li><a routerLink="/tutorials">Game Design Tutorials</a></li>
+          <li><a routerLink="/videos">Development Videos</a></li>
+          <li><a href="#">Code Examples</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3 class="footer-title">Resources</h3>
+        <ul class="footer-links">
+          <li><a href="#">Game Engines</a></li>
+          <li><a href="#">Design Tools</a></li>
+          <li><a href="#">Asset Libraries</a></li>
+          <li><a href="#">Developer Tools</a></li>
+        </ul>
+      </div>
+      
+      <div class="footer-section">
+        <h3 class="footer-title">Community</h3>
+        <ul class="footer-links">
+          <li><a href="#">Discord Server</a></li>
+          <li><a href="#">Submit Content</a></li>
+          <li><a href="#">Newsletter</a></li>
+          <li><a routerLink="/about">Contact Us</a></li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="footer-bottom">
+      <div class="footer-bottom-left">
+        <p>© 2024 The Game Loop. All rights reserved.</p>
+      </div>
+      <div class="footer-bottom-right">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Cookie Policy</a>
+        <span class="help-icon">&#x2753;</span>
+      </div>
+    </div>
+  </div>
+</footer>

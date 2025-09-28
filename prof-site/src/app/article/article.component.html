@@ -1,0 +1,146 @@
+<div class="article-detail-page" *ngIf="article">
+  <div class="container">
+    <!-- Article Header -->
+    <header class="article-header">
+      <div class="breadcrumb">
+        <a routerLink="/articles" class="breadcrumb-link">Articles</a>
+        <span class="breadcrumb-separator">→</span>
+        <span class="breadcrumb-current">{{ article.category }}</span>
+      </div>
+      
+      <div class="article-meta-header">
+        <div class="article-category">
+          <span class="category-badge">{{ article.category }}</span>
+          @if (article.featured) {
+            <span class="featured-badge">Featured</span>
+          }
+        </div>
+        
+        <h1 class="article-title">{{ article.title }}</h1>
+        
+        <div class="article-info">
+          <div class="author-info">
+            <div class="author-avatar">
+              <span class="avatar-initial">{{ article.author.charAt(0) }}</span>
+            </div>
+            <div class="author-details">
+              <span class="author-name">{{ article.author }}</span>
+              <span class="author-bio">{{ article.authorBio }}</span>
+            </div>
+          </div>
+          
+          <div class="article-stats">
+            <span class="stat">
+              <span class="icon">📅</span>
+              {{ article.publishDate }}
+            </span>
+            <span class="stat">
+              <span class="icon">⏱</span>
+              {{ article.readTime }} read
+            </span>
+            <span class="stat">
+              <span class="icon">👁</span>
+              {{ article.views }} views
+            </span>
+          </div>
+        </div>
+        
+        <div class="article-actions">
+          <button class="action-btn share-btn" (click)="shareArticle()">
+            <span class="icon">🔗</span>
+            Share
+          </button>
+          <button class="action-btn bookmark-btn">
+            <span class="icon">🔖</span>
+            Bookmark
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <div class="content-layout">
+      <!-- Main Article Content -->
+      <main class="article-content">
+        <div class="content-wrapper" [innerHTML]="article.content"></div>
+        
+        <!-- Article Tags -->
+        <div class="article-tags-section">
+          <h3>Tags</h3>
+          <div class="tags-list">
+            @for (tag of article.tags; track tag) {
+              <span class="tag">{{ tag }}</span>
+            }
+          </div>
+        </div>
+        
+        <!-- Article Navigation -->
+        <div class="article-navigation">
+          <button class="nav-btn" routerLink="/articles">
+            ← Back to Articles
+          </button>
+          <div class="article-actions-bottom">
+            <button class="action-btn" (click)="shareArticle()">
+              Share Article
+            </button>
+          </div>
+        </div>
+      </main>
+
+      <!-- Sidebar -->
+      <aside class="article-sidebar">
+        <!-- Table of Contents -->
+        <div class="sidebar-section">
+          <h3>Table of Contents</h3>
+          <nav class="toc">
+            <a href="#hook-habit-hobby" class="toc-link">The Hook, Habit, and Hobby Framework</a>
+            <a href="#flow-state" class="toc-link">The Role of Flow State</a>
+            <a href="#progression" class="toc-link">Progression Systems</a>
+            <a href="#conclusion" class="toc-link">Conclusion</a>
+          </nav>
+        </div>
+        
+        <!-- Related Articles -->
+        <div class="sidebar-section">
+          <h3>Related Articles</h3>
+          <div class="related-articles">
+            @for (relatedArticle of relatedArticles; track relatedArticle.id) {
+              <article class="related-article" (click)="navigateToArticle(relatedArticle.id)">
+                <div class="related-article-image">
+                  <div class="image-placeholder"></div>
+                </div>
+                <div class="related-article-content">
+                  <h4 class="related-title">{{ relatedArticle.title }}</h4>
+                  <div class="related-meta">
+                    <span class="related-author">{{ relatedArticle.author }}</span>
+                    <span class="related-time">{{ relatedArticle.readTime }}</span>
+                  </div>
+                </div>
+              </article>
+            }
+          </div>
+        </div>
+        
+        <!-- Newsletter Signup -->
+        <div class="sidebar-section newsletter">
+          <h3>Stay Updated</h3>
+          <p>Get the latest game development articles delivered to your inbox.</p>
+          <form class="newsletter-form">
+            <input type="email" placeholder="Enter your email" class="email-input">
+            <button type="submit" class="subscribe-btn">Subscribe</button>
+          </form>
+        </div>
+      </aside>
+    </div>
+  </div>
+</div>
+
+<!-- Loading/Error State -->
+<div class="loading-state" *ngIf="!article">
+  <div class="container">
+    <div class="loading-content">
+      <h2>Loading article...</h2>
+      <p>If this takes too long, the article might not exist.</p>
+      <button routerLink="/articles" class="back-btn">← Back to Articles</button>
+    </div>
+  </div>
+</div>
