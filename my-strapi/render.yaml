@@ -16,3 +16,7 @@ services:
         value: postgres
       - key: DATABASE_SSL
         value: false
+      - key: HOST
+        value: 0.0.0.0
+      - key: PORT
+        value: 10000
