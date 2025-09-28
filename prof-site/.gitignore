@@ -42,8 +42,9 @@ __screenshots__/
 .DS_Store
 Thumbs.db
 
-# Environment files (contains API tokens and secrets)
-/src/environments/environment.ts
+# Environment files (sensitive data removed for public repo)
+# Both environment files are tracked with placeholder values
+# Real values should be set via environment variables in production
 .env
 .env.local
 .env.production
