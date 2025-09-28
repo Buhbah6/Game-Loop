@@ -22,7 +22,7 @@ APP_KEYS=[4 comma-separated keys]
 API_TOKEN_SALT=[secure random string]
 ADMIN_JWT_SECRET=[secure random string]
 TRANSFER_TOKEN_SALT=[secure random string]
-JWT_SECRET=[secure random string]
+JWT_SECRET=[secure random string] ⚠️ CRITICAL: Used for users-permissions plugin
 ```
 
 ### Optional but Recommended
@@ -48,16 +48,23 @@ Then copy each key to the corresponding environment variable in your Render serv
 2. **Commit and push your changes**
 3. **Trigger a new deployment**
 
-## ❌ Previous Error Analysis
+## ❌ Previous Errors Analysis
 
-The deployment failed with:
+### Error 1: Missing admin.auth.secret
 ```
 Missing admin.auth.secret configuration. The SessionManager requires a JWT secret
 ```
+✅ **Fixed by**: Adding `admin.auth.secret` configuration in server.ts
 
-This has been fixed by:
-- Adding the `admin.auth.secret` configuration in server.ts
-- Ensuring ADMIN_JWT_SECRET environment variable is properly set
-- Adding explicit HOST and PORT configuration
+### Error 2: Missing jwtSecret for users-permissions
+```
+Missing jwtSecret. Please, set configuration variable "jwtSecret" for the users-permissions plugin
+```
+✅ **Fixed by**: Adding users-permissions configuration in plugins.ts
 
-Make sure to set the ADMIN_JWT_SECRET environment variable in your Render service!
+Both errors have been resolved by:
+- Configuring the admin authentication secret
+- Configuring the users-permissions plugin JWT secret
+- Ensuring JWT_SECRET environment variable is properly set
+
+**CRITICAL**: Make sure to set the JWT_SECRET environment variable in your Render service - it's used by both configurations!
