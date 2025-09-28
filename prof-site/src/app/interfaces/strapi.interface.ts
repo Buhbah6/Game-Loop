@@ -50,95 +50,37 @@ export interface StrapiImageFormat {
   url: string;
 }
 
-// Content type interfaces
+// Content type interfaces updated to match actual Strapi schema
 export interface Article extends StrapiEntity {
   title: string;
   slug: string;
-  content: string;
-  excerpt: string;
-  readTime: string;
-  featured: boolean;
-  publishDate: string;
-  views: string;
-  likes?: string;
-  category: {
-    data: Category;
-  };
-  author: {
-    data: Author;
-  };
-  tags: {
-    data: Tag[];
-  };
-  featuredImage?: {
-    data: StrapiImage;
-  };
+  coverImage?: StrapiImage;
+  summary: string;
+  body: string;
+  video?: any;
 }
 
 export interface Tutorial extends StrapiEntity {
   title: string;
   slug: string;
+  coverImage?: StrapiImage[];
   description: string;
-  duration: string;
-  difficulty: 'Beginner' | 'Intermediate' | 'Advanced';
-  featured: boolean;
-  publishDate: string;
-  views: string;
-  likes: string;
-  rating: number;
-  totalRatings: number;
-  whatYouLearn: string[];
-  requirements: string[];
-  chapters: TutorialChapter[];
-  category: {
-    data: Category;
-  };
-  instructor: {
-    data: Instructor;
-  };
-  tags: {
-    data: Tag[];
-  };
-  thumbnail?: {
-    data: StrapiImage;
-  };
-}
-
-export interface TutorialChapter {
-  title: string;
-  duration: string;
-  description: string;
-  completed?: boolean;
+  body: string;
+  video?: any;
 }
 
 export interface Video extends StrapiEntity {
   title: string;
-  slug: string;
-  description: string;
-  duration: string;
-  views: string;
-  likes: string;
-  publishDate: string;
-  videoUrl?: string;
-  chapters: VideoChapter[];
-  category: {
-    data: Category;
-  };
-  creator: {
-    data: Creator;
-  };
-  tags: {
-    data: Tag[];
-  };
+  youtubeURL?: string;
   thumbnail?: {
     data: StrapiImage;
   };
-}
-
-export interface VideoChapter {
-  title: string;
-  time: string;
-  duration: string;
+  article?: {
+    data: Article;
+  };
+  tutorial?: {
+    data: Tutorial;
+  };
 }
 
 export interface Category extends StrapiEntity {
@@ -146,40 +88,6 @@ export interface Category extends StrapiEntity {
   slug: string;
   description?: string;
   color?: string;
-}
-
-export interface Tag extends StrapiEntity {
-  name: string;
-  slug: string;
-}
-
-export interface Author extends StrapiEntity {
-  name: string;
-  slug: string;
-  bio: string;
-  avatar?: {
-    data: StrapiImage;
-  };
-}
-
-export interface Instructor extends StrapiEntity {
-  name: string;
-  slug: string;
-  bio: string;
-  experience?: string;
-  avatar?: {
-    data: StrapiImage;
-  };
-}
-
-export interface Creator extends StrapiEntity {
-  name: string;
-  slug: string;
-  bio: string;
-  subscriberCount?: string;
-  avatar?: {
-    data: StrapiImage;
-  };
 }
 
 // API query parameters

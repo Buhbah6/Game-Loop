@@ -1,100 +1,141 @@
-<!-- Header -->
-<header class="header">
-  <div class="container">
-    <div class="header-content">
-      <div class="logo" [routerLink]="['/']">
-        <div class="logo-icon">&#x1F3AE;</div>
-        <span class="logo-text">The Game Loop</span>
+<!-- Main Layout Wrapper -->
+<div class="page-layout">
+  <div class="sidebar-gradient left-sidebar"></div>
+  <div class="content-wrapper">
+    <!-- Header -->
+    <header class="header">
+      <div class="container">
+        <!-- Top Row - Logo and Action Buttons -->
+        <div class="header-top">
+          <div class="logo" [routerLink]="['/']">
+            <img src="assets/logo.png" alt="The Game Loop Logo" class="logo-icon" />
+            <img src="assets/textLogo.png" alt="The Game Loop Text Logo" class="logo-text" />
+          </div>
+          
+          <div class="header-actions">
+            <button class="action-btn search-btn" (click)="navigateToSearch()" aria-label="Search">
+              <span class="material-icons">search</span>
+            </button>
+            <button class="action-btn share-btn" aria-label="Share">
+              <span class="material-icons">share</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Bottom Row - Centered Navigation -->
+        <div class="header-bottom">
+          <!-- Mobile Menu Toggle -->
+          <div class="mobile-menu-toggle" [class.active]="isMobileMenuOpen()" (click)="toggleMobileMenu()">
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+            <div class="hamburger-line"></div>
+          </div>
+          
+          <!-- Desktop Navigation -->
+          <nav class="nav" [class.mobile-nav-open]="isMobileMenuOpen()">
+            <a routerLink="/" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">
+              <span class="material-icons">home</span>
+              <span class="nav-text">Home</span>
+            </a>
+            <a routerLink="/articles" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">
+              <span class="material-icons">article</span>
+              <span class="nav-text">Articles</span>
+            </a>
+            <a routerLink="/tutorials" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">
+              <span class="material-icons">school</span>
+              <span class="nav-text">Tutorials</span>
+            </a>
+            <a routerLink="/videos" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">
+              <span class="material-icons">play_circle</span>
+              <span class="nav-text">Videos</span>
+            </a>
+            <a routerLink="/about" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">
+              <span class="material-icons">info</span>
+              <span class="nav-text">About</span>
+            </a>
+          </nav>
+        </div>
       </div>
       
-      <!-- Desktop Navigation -->
-      <nav class="nav" [class.mobile-nav-open]="isMobileMenuOpen()">
-        <a routerLink="/" class="nav-link" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" (click)="closeMobileMenu()">Home</a>
-        <a routerLink="/articles" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">Articles</a>
-        <a routerLink="/tutorials" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">Tutorials</a>
-        <a routerLink="/videos" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">Videos</a>
-        <a routerLink="/about" class="nav-link" routerLinkActive="active" (click)="closeMobileMenu()">About</a>
-      </nav>
+      <!-- Mobile Overlay -->
+      <div class="mobile-overlay" [class.active]="isMobileMenuOpen()" (click)="closeMobileMenu()"></div>
+    </header>
+
+    <!-- Main Content Area -->
+    <div class="main-content-area">
+      <!-- Router Outlet for Page Content -->
+      <router-outlet></router-outlet>
       
-      <!-- Mobile Menu Toggle -->
-      <div class="mobile-menu-toggle" [class.active]="isMobileMenuOpen()" (click)="toggleMobileMenu()">
-        <div class="hamburger-line"></div>
-        <div class="hamburger-line"></div>
-        <div class="hamburger-line"></div>
-      </div>
-      
-      <div class="search-icon">&#x1F50D;</div>
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="container">
+          <div class="footer-content">
+            <div class="footer-brand">
+              <div class="logo">
+                <img src="assets/logo.png" alt="The Game Loop Logo" class="logo-icon" />
+                <img src="assets/textLogo.png" alt="The Game Loop Text Logo" class="logo-text" />
+              </div>
+              <p class="footer-description">
+                Your go-to source for game reviews, game dev tutorials, and overall development insights.
+              </p>
+                <div class="social-links">
+                <a href="https://discord.com/invite/your-server-id" class="social-link" target="_blank" rel="noopener" aria-label="Discord">
+                  <span class="material-icons" title="Join us on Discord">chat</span>
+                </a>
+                <a href="#" class="social-link">
+                  <span class="material-icons" title="Visit our YouTube channel">video_library</span>
+                </a>
+                <a href="#" class="social-link">
+                  <span class="material-icons" title="Email us">email</span>
+                </a>
+                </div>
+            </div>
+            
+            <div class="footer-section">
+              <h3 class="footer-title">Content</h3>
+              <ul class="footer-links">
+                <li><a routerLink="/articles">Latest Articles</a></li>
+                <li><a routerLink="/tutorials">Game Design Tutorials</a></li>
+                <li><a routerLink="/videos">Development Videos</a></li>
+                <li><a href="#">Contact Us</a></li>
+              </ul>
+            </div>
+            
+            <div class="footer-section newsletter-section">
+              <h3 class="footer-title">Stay Updated</h3>
+              <p class="newsletter-description">
+                Get the latest game reviews, and game development resources delivered to your inbox.
+              </p>
+              <form class="newsletter-form" (ngSubmit)="subscribeNewsletter()" #newsletterForm="ngForm">
+                <div class="email-input-group">
+                  <input 
+                    type="email" 
+                    class="email-input" 
+                    placeholder="Enter your email address"
+                    [(ngModel)]="newsletterEmail"
+                    name="email"
+                    required
+                    #emailInput="ngModel"
+                  />
+                  <button type="submit" class="subscribe-btn" [disabled]="!newsletterForm.form.valid">
+                    <span class="material-icons">send</span>
+                  </button>
+                </div>
+                <p class="newsletter-privacy">
+                  We respect your privacy. Unsubscribe at any time.
+                </p>
+              </form>
+            </div>
+          </div>
+          
+          <div class="footer-bottom">
+            <div class="footer-bottom-left">
+              <p>© 2025 The Game Loop. All rights reserved.</p>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   </div>
-  
-  <!-- Mobile Overlay -->
-  <div class="mobile-overlay" [class.active]="isMobileMenuOpen()" (click)="closeMobileMenu()"></div>
-</header>
-
-<!-- Router Outlet for Page Content -->
-<router-outlet></router-outlet>
-
-<!-- Footer -->
-<footer class="footer">
-  <div class="container">
-    <div class="footer-content">
-      <div class="footer-brand">
-        <div class="logo">
-          <div class="logo-icon">&#x1F3AE;</div>
-          <span class="logo-text">The Game Loop</span>
-        </div>
-        <p class="footer-description">
-          Empowering game developers with insights, tutorials, and creative inspiration to build the next generation of amazing games.
-        </p>
-        <div class="social-links">
-          <a href="#" class="social-link">&#x1F4F1;</a>
-          <a href="#" class="social-link">&#x1F426;</a>
-          <a href="#" class="social-link">&#x1F4FA;</a>
-          <a href="#" class="social-link">&#x2709;&#xFE0F;</a>
-        </div>
-      </div>
-      
-      <div class="footer-section">
-        <h3 class="footer-title">Content</h3>
-        <ul class="footer-links">
-          <li><a routerLink="/articles">Latest Articles</a></li>
-          <li><a routerLink="/tutorials">Game Design Tutorials</a></li>
-          <li><a routerLink="/videos">Development Videos</a></li>
-          <li><a href="#">Code Examples</a></li>
-        </ul>
-      </div>
-      
-      <div class="footer-section">
-        <h3 class="footer-title">Resources</h3>
-        <ul class="footer-links">
-          <li><a href="#">Game Engines</a></li>
-          <li><a href="#">Design Tools</a></li>
-          <li><a href="#">Asset Libraries</a></li>
-          <li><a href="#">Developer Tools</a></li>
-        </ul>
-      </div>
-      
-      <div class="footer-section">
-        <h3 class="footer-title">Community</h3>
-        <ul class="footer-links">
-          <li><a href="#">Discord Server</a></li>
-          <li><a href="#">Submit Content</a></li>
-          <li><a href="#">Newsletter</a></li>
-          <li><a routerLink="/about">Contact Us</a></li>
-        </ul>
-      </div>
-    </div>
-    
-    <div class="footer-bottom">
-      <div class="footer-bottom-left">
-        <p>© 2024 The Game Loop. All rights reserved.</p>
-      </div>
-      <div class="footer-bottom-right">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
-        <a href="#">Cookie Policy</a>
-        <span class="help-icon">&#x2753;</span>
-      </div>
-    </div>
-  </div>
-</footer>
+  <div class="sidebar-gradient right-sidebar"></div>
+</div>

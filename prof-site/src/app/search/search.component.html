@@ -1,0 +1,156 @@
+<div class="search-page">
+  <div class="container">
+    <!-- Search Header -->
+    <div class="search-header">
+      <button class="back-btn" (click)="goBack()" aria-label="Go Back">
+        <span class="material-icons">arrow_back</span>
+      </button>
+      <div class="search-input-wrapper">
+        <div class="search-input-container">
+          <span class="material-icons search-icon">search</span>
+          <input 
+            type="text" 
+            class="search-input" 
+            placeholder="Search articles, tutorials, and videos..."
+            [(ngModel)]="searchQuery"
+            (input)="onSearchInputChange()"
+            (keyup.enter)="onSearch()"
+          />
+          <button *ngIf="searchQuery()" class="clear-btn" (click)="onClearSearch()" aria-label="Clear search">
+            <span class="material-icons">close</span>
+          </button>
+        </div>
+        <div *ngIf="isSearching()" class="loading-indicator">
+          <span class="material-icons spinning">refresh</span>
+          Searching...
+        </div>
+      </div>
+    </div>
+
+    <!-- Search Results -->
+    <div class="search-results">
+      <div *ngIf="!hasSearched()" class="search-prompt">
+        <div class="search-prompt-icon">
+          <span class="material-icons">search</span>
+        </div>
+        <h2 class="search-prompt-title">Search The Game Loop</h2>
+        <p class="search-prompt-description">
+          Find articles, tutorials, and videos about game development. 
+          Start typing to see results from all content types.
+        </p>
+        <div class="search-suggestions">
+          <h3>Popular topics:</h3>
+          <div class="suggestion-tags">
+            <button class="suggestion-tag" (click)="onSuggestionClick('Unity')">Unity</button>
+            <button class="suggestion-tag" (click)="onSuggestionClick('Game Design')">Game Design</button>
+            <button class="suggestion-tag" (click)="onSuggestionClick('Pixel Art')">Pixel Art</button>
+            <button class="suggestion-tag" (click)="onSuggestionClick('Programming')">Programming</button>
+            <button class="suggestion-tag" (click)="onSuggestionClick('World Building')">World Building</button>
+          </div>
+        </div>
+      </div>
+      
+      <div *ngIf="hasSearched()">
+        <div class="results-header">
+          <h2 class="results-title">
+            Search Results for "<span class="query-highlight">{{ searchQuery() }}</span>"
+          </h2>
+          <div class="results-count">
+            {{ (articles().length + tutorials().length + videos().length) }} results found
+          </div>
+        </div>
+
+        <div class="results-grid">
+          <!-- Articles Column -->
+          <div class="results-column">
+            <div class="column-header">
+              <span class="material-icons">article</span>
+              <h3>Articles ({{ articles().length }})</h3>
+            </div>
+            <div *ngIf="articles().length > 0" class="results-list">
+              <div *ngFor="let article of articles()" class="result-card article-card" (click)="navigateToArticle(article)">
+                <div class="result-image">
+                  <img *ngIf="article.coverImage?.url" [src]="'http://localhost:1337' + article.coverImage!.url" [alt]="article.title" />
+                  <div *ngIf="!article.coverImage?.url" class="placeholder-image article-placeholder">
+                    <span class="material-icons">article</span>
+                  </div>
+                </div>
+                <div class="result-content">
+                  <h4 class="result-title">{{ article.title }}</h4>
+                  <p class="result-excerpt">{{ article.summary }}</p>
+                  <div class="result-meta">
+                    <span class="result-date">📅 {{ (article.publishedAt | date:'MMM d') || 'Recent' }}</span>
+                    <span class="result-type">Article</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="articles().length === 0" class="no-results">
+              <span class="material-icons">article</span>
+              <p>No articles found</p>
+            </div>
+          </div>
+
+          <!-- Tutorials Column -->
+          <div class="results-column">
+            <div class="column-header">
+              <span class="material-icons">school</span>
+              <h3>Tutorials ({{ tutorials().length }})</h3>
+            </div>
+            <div *ngIf="tutorials().length > 0" class="results-list">
+              <div *ngFor="let tutorial of tutorials()" class="result-card tutorial-card" (click)="navigateToTutorial(tutorial)">
+                <div class="result-image">
+                  <img *ngIf="tutorial.coverImage && tutorial.coverImage.length > 0" [src]="'http://localhost:1337' + tutorial.coverImage[0].url" [alt]="tutorial.title" />
+                  <div *ngIf="!tutorial.coverImage || tutorial.coverImage.length === 0" class="placeholder-image tutorial-placeholder">
+                    <span class="material-icons">school</span>
+                  </div>
+                </div>
+                <div class="result-content">
+                  <h4 class="result-title">{{ tutorial.title }}</h4>
+                  <p class="result-excerpt">{{ tutorial.description }}</p>
+                  <div class="result-meta">
+                    <span class="result-date">📅 {{ (tutorial.publishedAt | date:'MMM d') || 'Recent' }}</span>
+                    <span class="result-type">Tutorial</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="tutorials().length === 0" class="no-results">
+              <span class="material-icons">school</span>
+              <p>No tutorials found</p>
+            </div>
+          </div>
+
+          <!-- Videos Column -->
+          <div class="results-column">
+            <div class="column-header">
+              <span class="material-icons">play_circle</span>
+              <h3>Videos ({{ videos().length }})</h3>
+            </div>
+            <div *ngIf="videos().length > 0" class="results-list">
+              <div *ngFor="let video of videos()" class="result-card video-card" (click)="navigateToVideo(video)">
+                <div class="result-image">
+                  <img *ngIf="video.thumbnail?.data?.url" [src]="'http://localhost:1337' + video.thumbnail!.data!.url" [alt]="video.title" />
+                  <div *ngIf="!video.thumbnail?.data?.url" class="placeholder-image video-placeholder">
+                    <span class="material-icons">play_circle</span>
+                  </div>
+                </div>
+                <div class="result-content">
+                  <h4 class="result-title">{{ video.title }}</h4>
+                  <div class="result-meta">
+                    <span class="result-date">📅 {{ (video.createdAt | date:'MMM d') || 'Recent' }}</span>
+                    <span class="result-type">Video</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div *ngIf="videos().length === 0" class="no-results">
+              <span class="material-icons">play_circle</span>
+              <p>No videos found</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

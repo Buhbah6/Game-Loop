@@ -1,6 +1,6 @@
 .about-page {
-  background: #0d1223;
-  min-height: 100vh;
+  background: transparent;
+  min-height: calc(100vh - 70px);
   color: #fff;
   padding-top: 40px;
 
@@ -155,76 +155,16 @@
   }
 
   .mission-visual {
-    .code-block {
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 12px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      overflow: hidden;
+    text-align: center;
 
-      .code-header {
-        background: rgba(255, 255, 255, 0.05);
-        padding: 12px 16px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    img {
+      max-width: 100%;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+      transition: transform 0.3s ease;
 
-        .code-dots {
-          display: flex;
-          gap: 4px;
-
-          span {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.3);
-
-            &:first-child {
-              background: #ff5f57;
-            }
-
-            &:nth-child(2) {
-              background: #ffbd2e;
-            }
-
-            &:nth-child(3) {
-              background: #28ca42;
-            }
-          }
-        }
-
-        .code-title {
-          font-size: 14px;
-          color: rgba(255, 255, 255, 0.7);
-        }
-      }
-
-      .code-content {
-        padding: 20px;
-        font-family: 'Fira Code', monospace;
-        font-size: 14px;
-
-        .code-line {
-          margin: 4px 0;
-          color: rgba(255, 255, 255, 0.8);
-
-          .keyword {
-            color: #c792ea;
-          }
-
-          .class {
-            color: #ffcb6b;
-          }
-
-          .method {
-            color: #82aaff;
-          }
-
-          .comment {
-            color: #546e7a;
-            font-style: italic;
-          }
-        }
+      &:hover {
+        transform: translateY(-6px);
       }
     }
   }
@@ -271,17 +211,17 @@
   }
 }
 
-// Team Section
-.team {
+// Personal Story Section
+.personal-story {
   margin-bottom: 100px;
 
-  .team-grid {
+  .story-content {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 32px;
   }
 
-  .team-card {
+  .story-card {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 16px;
     padding: 32px 24px;
@@ -293,62 +233,23 @@
       transform: translateY(-6px);
     }
 
-    .member-avatar {
+    .story-icon {
+      font-size: 48px;
       margin-bottom: 20px;
-
-      .avatar-placeholder {
-        width: 80px;
-        height: 80px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #a855f7, #6366f1);
-        margin: 0 auto;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        .avatar-initial {
-          font-size: 32px;
-          font-weight: 600;
-          color: white;
-        }
-      }
     }
 
-    .member-name {
+    .story-title {
       font-size: 20px;
       font-weight: 600;
       color: #fff;
-      margin: 0 0 4px 0;
-    }
-
-    .member-role {
-      color: #a855f7;
-      font-weight: 500;
       margin: 0 0 16px 0;
     }
 
-    .member-bio {
+    .story-description {
       color: rgba(255, 255, 255, 0.7);
       line-height: 1.6;
-      margin: 0 0 20px 0;
+      margin: 0;
       font-size: 14px;
-    }
-
-    .member-expertise {
-      display: flex;
-      gap: 8px;
-      justify-content: center;
-      flex-wrap: wrap;
-
-      .skill-tag {
-        background: rgba(168, 85, 247, 0.2);
-        color: #a855f7;
-        padding: 4px 12px;
-        border-radius: 6px;
-        font-size: 12px;
-        font-weight: 500;
-        border: 1px solid rgba(168, 85, 247, 0.3);
-      }
     }
   }
 }
@@ -378,6 +279,11 @@
     .value-icon {
       font-size: 48px;
       margin-bottom: 20px;
+      
+      .material-icons {
+        font-size: 48px;
+        color: #a855f7;
+      }
     }
 
     .value-title {
@@ -468,10 +374,10 @@
     }
   }
 
-  .team {
+  .personal-story {
     margin-bottom: 80px;
 
-    .team-grid {
+    .story-content {
       gap: 20px;
     }
   }
@@ -548,31 +454,27 @@
     }
   }
 
-  .team {
+  .personal-story {
     margin-bottom: 60px;
 
-    .team-grid {
+    .story-content {
       grid-template-columns: 1fr;
       gap: 16px;
     }
 
-    .team-card {
+    .story-card {
       padding: 24px 20px;
 
-      .member-avatar .avatar-placeholder {
-        width: 60px;
-        height: 60px;
-
-        .avatar-initial {
-          font-size: 24px;
-        }
+      .story-icon {
+        font-size: 36px;
+        margin-bottom: 16px;
       }
 
-      .member-name {
+      .story-title {
         font-size: 18px;
       }
 
-      .member-bio {
+      .story-description {
         font-size: 13px;
       }
     }
@@ -592,6 +494,11 @@
       .value-icon {
         font-size: 36px;
         margin-bottom: 16px;
+        
+        .material-icons {
+          font-size: 36px;
+          color: #a855f7;
+        }
       }
 
       .value-title {
@@ -622,7 +529,7 @@
 // Touch improvements for mobile devices
 @media (hover: none) {
   .stat-card,
-  .team-card,
+  .story-card,
   .value-card {
     &:active {
       transform: scale(0.98);

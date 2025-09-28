@@ -1,145 +1,217 @@
 <div class="home">
-  <!-- Hero Section -->
-  <section class="hero">
-    <div class="container">
-      <div class="hero-content">
-        <h1 class="hero-title">Master Game Development</h1>
-        <p class="hero-subtitle">
-          Learn from industry experts through comprehensive articles, tutorials, and videos.
-          Build the games you've always dreamed of creating.
-        </p>
-        <div class="hero-buttons">
-          <button class="btn btn-primary" (click)="navigateToTutorials()">Start Learning</button>
-          <button class="btn btn-secondary" (click)="navigateToArticles()">Read Articles</button>
-        </div>
-      </div>
-    </div>
-  </section>
 
-  <!-- Featured Article -->
-  <section class="featured-article">
+  <!-- Main Content Grid -->
+  <section class="main">
     <div class="container">
-      <h2 class="section-title">Featured Article</h2>
-      @if (featuredArticle$ | async; as article) {
-        <div class="article-card featured" (click)="navigateToArticle(article)">
-          <div class="article-image">
-            <div class="image-placeholder"></div>
-          </div>
-          <div class="article-content">
-            <div class="article-meta">
-              <span class="category">{{ article.category.data.name }}</span>
-              <span class="read-time">{{ article.readTime }}</span>
-            </div>
-            <h3 class="article-title">{{ article.title }}</h3>
-            <p class="article-excerpt">{{ article.excerpt }}</p>
-            <div class="article-footer">
-              <div class="author-info">
-                <span class="author">{{ article.author.data.name }}</span>
-                <span class="publish-date">{{ article.publishDate }}</span>
-              </div>
-              <div class="article-stats">
-                @if (article.views) {
-                  <span class="views">{{ article.views }} views</span>
-                }
-                @if (article.likes) {
-                  <span class="likes">{{ article.likes }} likes</span>
-                }
-              </div>
-            </div>
-          </div>
-        </div>
-      }
-    </div>
-  </section>
+      <div class="content-grid">
+        <!-- Left Column - Featured Article & Recent Articles -->
+        <div class="main-content">
 
-  <!-- Featured Tutorials -->
-  <section class="featured-tutorials">
-    <div class="container">
-      <div class="section-header">
-        <h2 class="section-title">Popular Tutorials</h2>
-        <button class="btn btn-outline" (click)="navigateToTutorials()">View All</button>
-      </div>
-      <div class="tutorials-grid">
-        @for (tutorial of featuredTutorials$ | async; track tutorial.id) {
-          <div class="tutorial-card" (click)="navigateToTutorial(tutorial)">
-            <div class="tutorial-image">
-              <div class="image-placeholder"></div>
-              <div class="tutorial-duration">{{ tutorial.duration }}</div>
-            </div>
-            <div class="tutorial-content">
-              <div class="tutorial-meta">
-                <span class="category">{{ tutorial.category.data.name }}</span>
-                <span class="difficulty difficulty-{{ tutorial.difficulty.toLowerCase() }}">
-                  {{ tutorial.difficulty }}
-                </span>
-              </div>
-              <h3 class="tutorial-title">{{ tutorial.title }}</h3>
-              <p class="tutorial-description">{{ tutorial.description }}</p>
-              <div class="tutorial-footer">
-                <div class="instructor">
-                  <span>By {{ tutorial.instructor.data.name }}</span>
+          <!-- Featured Article -->
+          @if (featuredArticle$ | async; as article) {
+            <div class="featured-article">
+              <div class="article-card featured" (click)="navigateToArticle(article)">
+                <div class="article-image">
+                  @if (article.coverImage?.url) {
+                    <img [src]="'http://localhost:1337' + article.coverImage!.url" [alt]="article.title" 
+                         style="width: 100%; height: 100%; object-fit: cover;" />
+                  } @else {
+                    <div class="article-image-placeholder">
+                      <div class="code-preview">
+                        <div class="code-line">const player = {{ '{' }}</div>
+                        <div class="code-line">&nbsp;&nbsp;health: 100,</div>
+                        <div class="code-line">&nbsp;&nbsp;position: {{ '{' }} x: 0, y: 0 {{ '}' }},</div>
+                        <div class="code-line">&nbsp;&nbsp;velocity: {{ '{' }} x: 0, y: 0 {{ '}' }},</div>
+                        <div class="code-line">&nbsp;&nbsp;// Player engagement logic</div>
+                        <div class="code-line">&nbsp;&nbsp;updateRewardSystem() {{ '{' }}</div>
+                        <div class="code-line">&nbsp;&nbsp;&nbsp;&nbsp;this.rewards.push('achievement');</div>
+                        <div class="code-line">&nbsp;&nbsp;{{ '}' }}</div>
+                        <div class="code-line">{{ '}' }};</div>
+                      </div>
+                    </div>
+                  }
                 </div>
-                <div class="tutorial-stats">
-                  @if (tutorial.rating) {
-                    <span class="rating">★ {{ tutorial.rating }}</span>
-                  }
-                  @if (tutorial.views) {
-                    <span class="students">{{ tutorial.views }} views</span>
-                  }
+                <div class="article-content">
+                  <div class="article-tags">
+                    <span class="tag tag-featured">Featured</span>
+                    <span class="tag tag-game-design">Game Design</span>
+                  </div>
+                  <h3 class="article-title">{{ article.title }}</h3>
+                  <p class="article-excerpt">{{ article.summary || 'No summary available' }}</p>
+                  <div class="article-meta">
+                    <div class="article-date">
+                      📅 {{ (article.publishedAt | date:'MMM d') || 'Recent' }}
+                    </div>
+                  </div>
+                  <a href="#" class="read-more">Read Full Article →</a>
                 </div>
               </div>
             </div>
-          </div>
-        }
-      </div>
-    </div>
-  </section>
+          }
 
-  <!-- Featured Video -->
-  <section class="featured-video">
-    <div class="container">
-      <h2 class="section-title">Latest Video</h2>
-      @if (featuredVideo$ | async; as video) {
-        <div class="video-card featured" (click)="navigateToVideo(video)">
-          <div class="video-thumbnail">
-            <div class="image-placeholder"></div>
-            <div class="play-button">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M8 5v14l11-7z"/>
-              </svg>
-            </div>
-            <div class="video-duration">{{ video.duration }}</div>
+          <!-- Recent Articles Grid -->
+          <div class="article-grid">
+            @for (article of recentArticles$ | async; track article.id; let i = $index) {
+              <div class="article-card" (click)="navigateToArticle(article)">
+                  <div class="article-image">
+                    @if (article.coverImage?.url) {
+                      <img [src]="'http://localhost:1337' + article.coverImage!.url" [alt]="article.title" 
+                           style="width: 100%; height: 100%; object-fit: cover;" />
+                    } @else {
+                      @if (i === 0) {
+                        <!-- World Building -->
+                        <div class="gradient-bg purple">
+                          <div class="article-visual">
+                            <div class="planet-icon">🌍</div>
+                          </div>
+                        </div>
+                        <div class="article-category">World Building</div>
+                      } @else if (i === 1) {
+                        <!-- Game Balance -->
+                        <div class="code-bg">
+                          <div class="mini-code">
+                            <div class="code-line">if (player.health &lt; 50) {{ '{' }}</div>
+                            <div class="code-line">&nbsp;&nbsp;showWarning();</div>
+                            <div class="code-line">{{ '}' }}</div>
+                          </div>
+                        </div>
+                        <div class="article-category">Game Balance</div>
+                      } @else if (i === 2) {
+                        <!-- Marketing -->
+                        <div class="code-bg">
+                          <div class="mini-code">
+                            <div class="code-line">const marketing = {{ '{' }}</div>
+                            <div class="code-line">&nbsp;&nbsp;strategy: 'viral'</div>
+                            <div class="code-line">{{ '}' }};</div>
+                          </div>
+                        </div>
+                        <div class="article-category">Marketing</div>
+                      } @else if (i === 3) {
+                        <!-- Programming -->
+                        <div class="gradient-bg purple">
+                          <div class="article-visual">
+                            <div class="code-symbol">{{ '{' }} {{ '}' }}</div>
+                          </div>
+                        </div>
+                        <div class="article-category">Programming</div>
+                      } @else {
+                        <!-- Default -->
+                        <div class="gradient-bg purple">
+                          <div class="article-visual">
+                            <div class="material-icons game-icon">sports_esports</div>
+                          </div>
+                        </div>
+                        <div class="article-category">Development</div>
+                      }
+                    }
+                  </div>
+                  <div class="article-content">
+                    <h4 class="article-title">{{ article.title }}</h4>
+                    <p class="article-excerpt">{{ article.summary || 'No summary available' }}</p>
+                    <div class="article-meta">
+                      <div class="article-date">📅 {{ (article.publishedAt | date:'MMM d') || 'Recent' }}</div>
+                    </div>
+                    <a href="#" class="read-more">Read More →</a>
+                  </div>
+                </div>
+            }
           </div>
-          <div class="video-content">
-            <div class="video-meta">
-              <span class="category">{{ video.category.data.name }}</span>
-              <span class="publish-date">{{ video.publishDate }}</span>
-            </div>
-            <h3 class="video-title">{{ video.title }}</h3>
-            <p class="video-description">{{ video.description }}</p>
-            <div class="video-footer">
-              <div class="creator">
-                <span>{{ video.creator.data.name }}</span>
+          
+          <!-- See All Articles Button -->
+          @if (allArticles$ | async; as allArticles) {
+            @if (!showAllArticles && allArticles.length > 7) {
+              <div class="see-all-section">
+                <button class="see-all-btn" (click)="toggleShowAllArticles()">
+                  <span class="material-icons">article</span> See All Articles ({{ allArticles.length - 1 }} total)
+                </button>
               </div>
-              <div class="video-stats">
-                <span class="views">{{ video.views }} views</span>
-                <span class="likes">{{ video.likes }} likes</span>
+            } @else if (showAllArticles) {
+              <div class="see-all-section">
+                <button class="see-all-btn" (click)="toggleShowAllArticles()">
+                  <span class="material-icons">article</span> Show Less Articles
+                </button>
               </div>
+            }
+          }
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="sidebar">
+          <!-- Latest Tutorials -->
+          <div class="sidebar-section">
+            <h3 class="sidebar-title">
+              <span class="code-icon">{{ '{' }} {{ '}' }}</span>
+              Latest Tutorials
+            </h3>
+            
+            @for (tutorial of latestTutorials$ | async; track tutorial.id; let i = $index) {
+              <div class="tutorial-card" (click)="navigateToTutorial(tutorial)">
+                  <div class="tutorial-image">
+                    @if (tutorial.coverImage && tutorial.coverImage.length > 0) {
+                      <img [src]="'http://localhost:1337' + tutorial.coverImage[0].url" [alt]="tutorial.title" 
+                           style="width: 100%; height: 100%; object-fit: cover;" />
+                      @if (i === 0) {
+                        <div class="tutorial-badge new">New</div>
+                      }
+                    } @else {
+                      @if (i === 0) {
+                        <div class="gradient-bg unity"><span class="material-icons">sports_esports</span></div>
+                        <div class="tutorial-category unity">Unity</div>
+                        <div class="tutorial-badge new">New</div>
+                      } @else if (i === 1) {
+                        <div class="code-bg small">
+                          <div class="mini-code">
+                            <div class="code-line">createPixelArt()</div>
+                          </div>
+                        </div>
+                        <div class="tutorial-category art">Art</div>
+                      } @else if (i === 2) {
+                        <div class="gradient-bg audio">🎵</div>
+                        <div class="tutorial-category audio">Audio</div>
+                      } @else if (i === 3) {
+                        <div class="code-bg small">
+                          <div class="mini-code">
+                            <div class="code-line">balanceAI()</div>
+                          </div>
+                        </div>
+                        <div class="tutorial-category ai">AI</div>
+                      } @else {
+                        <div class="gradient-bg mobile"><span class="material-icons">smartphone</span></div>
+                        <div class="tutorial-category mobile">Mobile</div>
+                      }
+                    }
+                  </div>
+                  <div class="tutorial-content">
+                    <h4 class="tutorial-title">{{ tutorial.title }}</h4>
+                    <div class="tutorial-meta">
+                      <div class="tutorial-date">
+                        📅 {{ (tutorial.publishedAt | date:'MMM d') || 'Recent' }}
+                      </div>
+                    </div>
+                    <a href="#" class="start-tutorial">Start Tutorial →</a>
+                  </div>
+                </div>
+            }
+
+            <div class="view-all">
+              @if (allTutorials$ | async; as allTutorials) {
+                @if (!showAllTutorials && allTutorials.length > 5) {
+                  <button class="view-all-btn" (click)="toggleShowAllTutorials()">
+                    👁️ Show All Tutorials ({{ allTutorials.length }} total)
+                  </button>
+                } @else if (showAllTutorials) {
+                  <button class="view-all-btn" (click)="toggleShowAllTutorials()">
+                    👁️ Show Less Tutorials
+                  </button>
+                } @else {
+                  <a href="#" class="view-all-link" (click)="navigateToTutorials()">
+                    👁️ View All Tutorials →
+                  </a>
+                }
+              }
             </div>
           </div>
         </div>
-      }
-    </div>
-  </section>
-
-  <!-- Call to Action -->
-  <section class="cta">
-    <div class="container">
-      <h2>Ready to Start Your Game Development Journey?</h2>
-      <p>Join thousands of developers learning to create amazing games</p>
-      <div class="cta-buttons">
-        <button class="btn btn-primary" (click)="navigateToTutorials()">Browse Tutorials</button>
-        <button class="btn btn-secondary" (click)="navigateToVideos()">Watch Videos</button>
       </div>
     </div>
   </section>
