@@ -1,203 +1,164 @@
-@if (video) {
 <div class="video-detail-page">
-  <div class="container">
-    <!-- Video Header -->
-    <header class="video-header">
-      <div class="breadcrumb">
-        <a routerLink="/videos" class="breadcrumb-link">Videos</a>
-        <span class="breadcrumb-separator">→</span>
-        <span class="breadcrumb-current">{{ video.category }}</span>
+  <!-- Loading State -->
+  @if (loading) {
+    <div class="container">
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Loading video...</p>
       </div>
-    </header>
+    </div>
+  }
 
-    <div class="video-layout">
-      <!-- Main Video Section -->
-      <main class="video-main">
-        <!-- Video Player -->
-        <div class="video-player-container">
-          <div class="video-player">
-            <div class="video-thumbnail">
-              <div class="thumbnail-placeholder">
-                <!-- In a real app, this would be an actual video player -->
-                <div class="play-button" (click)="togglePlayPause()">
-                  @if (isPlaying) {
-                    <span class="pause-icon">⏸️</span>
-                  } @else {
-                    <span class="play-icon">▶️</span>
-                  }
-                </div>
-              </div>
-            </div>
-            
-            <!-- Video Controls -->
-            <div class="video-controls">
-              <div class="progress-bar">
-                <div class="progress-track">
-                  <div class="progress-fill" [style.width.%]="(currentTime / duration) * 100"></div>
-                </div>
-              </div>
-              
-              <div class="control-buttons">
-                <button class="control-btn" (click)="togglePlayPause()">
-                  @if (isPlaying) {
-                    ⏸️
-                  } @else {
-                    ▶️
-                  }
-                </button>
-                <span class="time-display">0:00 / {{ video.duration }}</span>
-                <div class="spacer"></div>
-                <button class="control-btn">🔊</button>
-                <button class="control-btn">⚙️</button>
-                <button class="control-btn">⛶️</button>
-              </div>
-            </div>
-          </div>
+  <!-- Error State -->
+  @if (error && !loading) {
+    <div class="container">
+      <div class="error-state">
+        <h2>Video Not Found</h2>
+        <p>The video you're looking for doesn't exist or couldn't be loaded.</p>
+        <button routerLink="/videos" class="back-btn">Back to Videos</button>
+      </div>
+    </div>
+  }
+
+  <!-- Video Content -->
+  @if (video && !loading && !error) {
+    <div class="container">
+      <!-- Video Header -->
+      <header class="video-header">
+        <div class="breadcrumb">
+          <a routerLink="/videos" class="breadcrumb-link">Videos</a>
+          <span class="breadcrumb-separator">→</span>
+          <span class="breadcrumb-current">{{ video.category }}</span>
         </div>
         
-        <!-- Video Info -->
-        <div class="video-info">
-          <h1 class="video-title">{{ video.title }}</h1>
-          
-          <div class="video-meta">
-            <div class="video-stats">
-              <span class="stat">
-                <span class="icon">👁</span>
-                {{ video.views }} views
-              </span>
-              <span class="stat">
-                <span class="icon">📅</span>
-                {{ video.publishDate }}
-              </span>
+        <div class="video-hero">
+          <div class="video-info">
+            <div class="video-meta">
+              <span class="category-badge">{{ video.category }}</span>
             </div>
             
-            <div class="video-actions">
-              <button class="action-btn like-btn" (click)="likeVideo()">
-                <span class="icon">👍</span>
-                {{ video.likes }}
-              </button>
-              <button class="action-btn share-btn" (click)="shareVideo()">
-                <span class="icon">🔗</span>
-                Share
-              </button>
-              <button class="action-btn save-btn">
-                <span class="icon">🔖</span>
-                Save
-              </button>
+            <h1 class="video-title">{{ video.title }}</h1>
+            <p class="video-description">{{ video.summary }}</p>
+            
+            <div class="video-stats">
+              <div class="stat-group">
+                <span class="stat">
+                  <span class="icon">📅</span>
+                  {{ getFormattedDate(video.publishedAt || video.createdAt) }}
+                </span>
+                <span class="stat">
+                  <span class="icon">⏱</span>
+                  45:30 duration
+                </span>
+                <span class="stat">
+                  <span class="icon">👁</span>
+                  125K views
+                </span>
+                <span class="stat">
+                  <span class="icon">❤️</span>
+                  8.2K likes
+                </span>
+              </div>
             </div>
-          </div>
-          
-          <!-- Creator Info -->
-          <div class="creator-section">
+            
             <div class="creator-info">
               <div class="creator-avatar">
-                <span class="avatar-text">{{ getCreatorInitials() }}</span>
+                <span class="avatar-text">GD</span>
               </div>
               <div class="creator-details">
-                <h3 class="creator-name">{{ video.creator }}</h3>
-                <p class="creator-bio">{{ video.creatorBio }}</p>
+                <h3 class="creator-name">GameDev Academy</h3>
+                <p class="creator-bio">Leading game development education channel</p>
               </div>
             </div>
-            <button class="subscribe-btn" (click)="subscribeToCreator()">
-              Subscribe
+          </div>
+
+          <!-- Cover Image/Video Thumbnail -->
+          @if (video.coverImage?.url) {
+            <div class="video-thumbnail">
+              <img 
+                [src]="getVideoImageUrl(video)" 
+                [alt]="getVideoImageAlt(video)"
+                class="thumbnail-image" />
+              <div class="play-overlay">
+                <button class="play-button" (click)="togglePlayback()">
+                  <span class="play-icon">▶</span>
+                </button>
+              </div>
+            </div>
+          } @else {
+            <div class="video-thumbnail-placeholder">
+              <div class="play-overlay">
+                <button class="play-button" (click)="togglePlayback()">
+                  <span class="play-icon">▶</span>
+                </button>
+              </div>
+              <span class="placeholder-icon">🎥</span>
+            </div>
+          }
+          
+          <div class="video-actions">
+            <button class="action-btn share-btn" (click)="shareVideo()">
+              <span class="icon">🔗</span>
+              Share
             </button>
           </div>
-          
-          <!-- Video Description -->
-          <div class="video-description">
-            <div class="description-content" [innerHTML]="video.description"></div>
-            
-            <!-- Tags -->
-            <div class="video-tags">
-              <h4>Tags</h4>
-              <div class="tags-list">
-                @for (tag of video.tags; track tag) {
-                  <span class="tag">{{ tag }}</span>
-                }
-              </div>
-            </div>
-          </div>
+        </div>
+      </header>
+
+      <!-- Video Content -->
+      <main class="video-content">
+        <div class="content-summary">
+          <p class="summary-text">{{ video.summary }}</p>
         </div>
         
-        <!-- Comments Section Placeholder -->
-        <div class="comments-section">
-          <h3>Comments</h3>
-          <div class="comments-placeholder">
-            <p>Comments section would be implemented here in a real application.</p>
-            <div class="comment-form">
-              <textarea placeholder="Add a public comment..." class="comment-input"></textarea>
-              <div class="comment-actions">
-                <button class="cancel-btn">Cancel</button>
-                <button class="post-btn">Comment</button>
-              </div>
-            </div>
+        <div class="content-wrapper" [innerHTML]="video.body"></div>
+        
+        <div class="video-footer">
+          <div class="tags">
+            <span class="tag">{{ video.category }}</span>
+            <span class="tag">Tutorial</span>
           </div>
         </div>
       </main>
 
-      <!-- Sidebar -->
-      <aside class="video-sidebar">
-        <!-- Video Chapters -->
-        @if (video.chapters && video.chapters.length > 0) {
-          <div class="sidebar-section">
-            <h3>Chapters</h3>
-            <div class="chapters-list">
-              @for (chapter of video.chapters; track $index) {
-                <div class="chapter-item" (click)="seekToChapter(chapter.time)">
-                  <div class="chapter-time">{{ chapter.time }}</div>
-                  <div class="chapter-info">
-                    <h4 class="chapter-title">{{ chapter.title }}</h4>
-                    <span class="chapter-duration">{{ chapter.duration }}</span>
-                  </div>
-                </div>
-              }
-            </div>
-          </div>
-        }
-        
-        <!-- Related Videos -->
-        <div class="sidebar-section">
-          <h3>Related Videos</h3>
-          <div class="related-videos">
+      <!-- Related Videos -->
+      @if (relatedVideos.length > 0) {
+        <section class="related-videos">
+          <h2 class="section-title">Related Videos</h2>
+          <div class="related-grid">
             @for (relatedVideo of relatedVideos; track relatedVideo.id) {
-              <div class="related-video" (click)="navigateToVideo(relatedVideo.id)">
-                <div class="related-thumbnail">
-                  <div class="thumbnail-placeholder"></div>
-                  <span class="video-duration">{{ relatedVideo.duration }}</span>
-                </div>
-                <div class="related-info">
-                  <h4 class="related-title">{{ relatedVideo.title }}</h4>
+              <article class="related-video" (click)="navigateToVideo(relatedVideo)">
+                @if (relatedVideo.coverImage?.url) {
+                  <div class="related-image">
+                    <img 
+                      [src]="getVideoImageUrl(relatedVideo)" 
+                      [alt]="getVideoImageAlt(relatedVideo)"
+                      loading="lazy" />
+                    <div class="video-play-overlay">
+                      <span class="play-icon-small">▶</span>
+                    </div>
+                  </div>
+                } @else {
+                  <div class="related-image-placeholder">
+                    <span class="placeholder-icon">🎥</span>
+                    <div class="video-play-overlay">
+                      <span class="play-icon-small">▶</span>
+                    </div>
+                  </div>
+                }
+                <div class="related-content">
+                  <h3 class="related-title">{{ relatedVideo.title }}</h3>
+                  <p class="related-summary">{{ relatedVideo.summary }}</p>
                   <div class="related-meta">
-                    <span class="related-creator">{{ relatedVideo.creator }}</span>
-                    <span class="related-views">{{ relatedVideo.views }} views</span>
+                    <span class="related-category">{{ relatedVideo.category }}</span>
+                    <span class="related-date">{{ getFormattedDate(relatedVideo.publishedAt || relatedVideo.createdAt) }}</span>
                   </div>
                 </div>
-              </div>
+              </article>
             }
           </div>
-        </div>
-        
-        <!-- Subscribe Reminder -->
-        <div class="sidebar-section subscribe-section">
-          <h3>Enjoying the Content?</h3>
-          <p>Subscribe to {{ video.creator }} for more game development tutorials and tips.</p>
-          <button class="subscribe-sidebar-btn" (click)="subscribeToCreator()">
-            Subscribe Now
-          </button>
-        </div>
-      </aside>
+        </section>
+      }
     </div>
-  </div>
+  }
 </div>
-} @else {
-<!-- Loading State -->
-<div class="loading-state">
-  <div class="container">
-    <div class="loading-content">
-      <h2>Loading video...</h2>
-      <p>If this takes too long, the video might not exist.</p>
-      <button routerLink="/videos" class="back-btn">← Back to Videos</button>
-    </div>
-  </div>
-</div>
-}

@@ -13,11 +13,11 @@ export const routes: Routes = [
   { path: '', component: MainComponent },
   { path: 'search', component: SearchComponent },
   { path: 'articles', component: ArticlesMainComponent },
-  { path: 'articles/:id', component: ArticleComponent },
+  { path: 'articles/:documentId', component: ArticleComponent },
   { path: 'tutorials', component: TutorialsMainComponent },
-  { path: 'tutorials/:id', component: TutorialComponent },
+  { path: 'tutorials/:documentId', component: TutorialComponent },
   { path: 'videos', component: VideosMainComponent },
-  { path: 'videos/:id', component: VideoComponent },
+  { path: 'videos/:documentId', component: VideoComponent },
   { path: 'about', component: AboutComponent },
   { path: '**', redirectTo: '' }
 ];

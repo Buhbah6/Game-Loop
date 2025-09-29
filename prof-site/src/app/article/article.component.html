@@ -1,19 +1,38 @@
-<div class="article-detail-page" *ngIf="article">
-  <div class="container">
-    <!-- Article Header -->
-    <header class="article-header">
-      <div class="breadcrumb">
-        <a routerLink="/articles" class="breadcrumb-link">Articles</a>
-        <span class="breadcrumb-separator">→</span>
-        <span class="breadcrumb-current">{{ article.category }}</span>
+<div class="article-detail-page">
+  <!-- Loading State -->
+  @if (loading) {
+    <div class="container">
+      <div class="loading-state">
+        <div class="loading-spinner"></div>
+        <p>Loading article...</p>
       </div>
-      
-      <div class="article-meta-header">
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error && !loading) {
+    <div class="container">
+      <div class="error-state">
+        <h2>Article Not Found</h2>
+        <p>The article you're looking for doesn't exist or couldn't be loaded.</p>
+        <button routerLink="/articles" class="back-btn">Back to Articles</button>
+      </div>
+    </div>
+  }
+
+  <!-- Article Content -->
+  @if (article && !loading && !error) {
+    <div class="container">
+      <!-- Article Header -->
+      <header class="article-header">
+        <div class="breadcrumb">
+          <a routerLink="/articles" class="breadcrumb-link">Articles</a>
+          <span class="breadcrumb-separator">→</span>
+          <span class="breadcrumb-current">Article</span>
+        </div>
+        
         <div class="article-category">
-          <span class="category-badge">{{ article.category }}</span>
-          @if (article.featured) {
-            <span class="featured-badge">Featured</span>
-          }
+          <span class="category-badge">Article</span>
         </div>
         
         <h1 class="article-title">{{ article.title }}</h1>
@@ -21,26 +40,26 @@
         <div class="article-info">
           <div class="author-info">
             <div class="author-avatar">
-              <span class="avatar-initial">{{ article.author.charAt(0) }}</span>
+              <span class="avatar-initial">GD</span>
             </div>
             <div class="author-details">
-              <span class="author-name">{{ article.author }}</span>
-              <span class="author-bio">{{ article.authorBio }}</span>
+              <div class="author-name">Game Dev Expert</div>
+              <div class="author-bio">Professional game developer and educator</div>
             </div>
           </div>
           
           <div class="article-stats">
             <span class="stat">
               <span class="icon">📅</span>
-              {{ article.publishDate }}
+              {{ getFormattedDate(article.publishedAt || article.createdAt) }}
             </span>
             <span class="stat">
               <span class="icon">⏱</span>
-              {{ article.readTime }} read
+              5 min read
             </span>
             <span class="stat">
               <span class="icon">👁</span>
-              {{ article.views }} views
+              1.2K views
             </span>
           </div>
         </div>
@@ -50,97 +69,100 @@
             <span class="icon">🔗</span>
             Share
           </button>
-          <button class="action-btn bookmark-btn">
-            <span class="icon">🔖</span>
-            Bookmark
-          </button>
         </div>
-      </div>
-    </header>
 
-    <div class="content-layout">
-      <!-- Main Article Content -->
-      <main class="article-content">
-        <div class="content-wrapper" [innerHTML]="article.content"></div>
-        
-        <!-- Article Tags -->
-        <div class="article-tags-section">
-          <h3>Tags</h3>
-          <div class="tags-list">
-            @for (tag of article.tags; track tag) {
-              <span class="tag">{{ tag }}</span>
-            }
+        <!-- Cover Image -->
+        @if (article.coverImage?.url) {
+          <div class="article-cover-image">
+            <img 
+              [src]="getArticleImageUrl(article)" 
+              [alt]="getArticleImageAlt(article)"
+              class="cover-image" />
           </div>
-        </div>
-        
-        <!-- Article Navigation -->
-        <div class="article-navigation">
-          <button class="nav-btn" routerLink="/articles">
-            ← Back to Articles
-          </button>
-          <div class="article-actions-bottom">
-            <button class="action-btn" (click)="shareArticle()">
-              Share Article
-            </button>
+        }
+      </header>
+      
+      <!-- Content Layout -->
+      <div class="content-layout">
+        <!-- Main Article Content -->
+        <main class="article-content">
+          <!-- Summary -->
+          @if (article.summary) {
+            <div class="content-summary">
+              <p class="summary-text">{{ article.summary }}</p>
+            </div>
+          }
+          
+          <!-- Article Body -->
+          <div class="content-wrapper" [innerHTML]="article.body"></div>
+          
+          <!-- Tags -->
+          <div class="article-tags-section">
+            <h3>Tags</h3>
+            <div class="tags-list">
+              <span class="tag">Game Development</span>
+              <span class="tag">Article</span>
+            </div>
           </div>
-        </div>
-      </main>
-
-      <!-- Sidebar -->
-      <aside class="article-sidebar">
-        <!-- Table of Contents -->
-        <div class="sidebar-section">
-          <h3>Table of Contents</h3>
-          <nav class="toc">
-            <a href="#hook-habit-hobby" class="toc-link">The Hook, Habit, and Hobby Framework</a>
-            <a href="#flow-state" class="toc-link">The Role of Flow State</a>
-            <a href="#progression" class="toc-link">Progression Systems</a>
-            <a href="#conclusion" class="toc-link">Conclusion</a>
-          </nav>
-        </div>
+          
+          <!-- Navigation -->
+          <div class="article-navigation">
+            <a routerLink="/articles" class="nav-btn">
+              ← Back to Articles
+            </a>
+            <div class="article-actions-bottom">
+              <button class="action-btn" (click)="shareArticle()">
+                Share Article
+              </button>
+            </div>
+          </div>
+        </main>
         
-        <!-- Related Articles -->
-        <div class="sidebar-section">
-          <h3>Related Articles</h3>
-          <div class="related-articles">
-            @for (relatedArticle of relatedArticles; track relatedArticle.id) {
-              <article class="related-article" (click)="navigateToArticle(relatedArticle.id)">
-                <div class="related-article-image">
-                  <div class="image-placeholder"></div>
-                </div>
-                <div class="related-article-content">
-                  <h4 class="related-title">{{ relatedArticle.title }}</h4>
-                  <div class="related-meta">
-                    <span class="related-author">{{ relatedArticle.author }}</span>
-                    <span class="related-time">{{ relatedArticle.readTime }}</span>
+        <!-- Sidebar -->
+        <aside class="article-sidebar">
+          <!-- Quick Stats -->
+          <div class="sidebar-section">
+            <h3>Article Stats</h3>
+            <div class="article-meta">
+              <p><strong>Published:</strong> {{ getFormattedDate(article.publishedAt || article.createdAt) }}</p>
+              <p><strong>Reading Time:</strong> 5 min</p>
+              <p><strong>Views:</strong> 1.2K</p>
+            </div>
+          </div>
+          
+          <!-- Related Articles -->
+          @if (relatedArticles.length > 0) {
+            <div class="sidebar-section">
+              <h3>Related Articles</h3>
+              <div class="related-articles">
+                @for (relatedArticle of relatedArticles; track relatedArticle.id) {
+                  <div class="related-article" (click)="navigateToArticle(relatedArticle)">
+                    <div class="related-article-image">
+                      @if (relatedArticle.coverImage?.url) {
+                        <img 
+                          [src]="getArticleImageUrl(relatedArticle)" 
+                          [alt]="getArticleImageAlt(relatedArticle)"
+                          loading="lazy" />
+                      } @else {
+                        <div class="image-placeholder"></div>
+                      }
+                    </div>
+                    <div class="related-article-content">
+                      <h4 class="related-title">{{ relatedArticle.title }}</h4>
+                      <div class="related-meta">
+                        <span class="related-author">Game Dev Expert</span>
+                        <span class="related-date">{{ getFormattedDate(relatedArticle.publishedAt || relatedArticle.createdAt) }}</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </article>
-            }
-          </div>
-        </div>
-        
-        <!-- Newsletter Signup -->
-        <div class="sidebar-section newsletter">
-          <h3>Stay Updated</h3>
-          <p>Get the latest game development articles delivered to your inbox.</p>
-          <form class="newsletter-form">
-            <input type="email" placeholder="Enter your email" class="email-input">
-            <button type="submit" class="subscribe-btn">Subscribe</button>
-          </form>
-        </div>
-      </aside>
-    </div>
-  </div>
-</div>
+                }
+              </div>
+            </div>
+          }
+        </aside>
+      </div>
 
-<!-- Loading/Error State -->
-<div class="loading-state" *ngIf="!article">
-  <div class="container">
-    <div class="loading-content">
-      <h2>Loading article...</h2>
-      <p>If this takes too long, the article might not exist.</p>
-      <button routerLink="/articles" class="back-btn">← Back to Articles</button>
+
     </div>
-  </div>
+  }
 </div>

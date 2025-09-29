@@ -41,32 +41,44 @@
 
     <!-- Tutorials Grid -->
     <section class="tutorials-grid">
-      @for (tutorial of filteredTutorials; track tutorial.id) {
+      @for (tutorial of filteredTutorials$ | async; track tutorial.id) {
         <div 
           class="tutorial-card"
-          [class.featured]="tutorial.featured"
-          [routerLink]="['/tutorials', tutorial.id]">
+          [class.featured]="tutorial.id === 1"
+          (click)="navigateToTutorial(tutorial)"
+          style="cursor: pointer;">
           
           <div class="tutorial-image">
+            @if (tutorial.coverImage && tutorial.coverImage.length > 0 && tutorial.coverImage[0].url) {
+              <img 
+                [src]="getTutorialImageUrl(tutorial)" 
+                [alt]="getTutorialImageAlt(tutorial)"
+                class="cover-image"
+                loading="lazy" />
+            } @else {
+              <div class="image-placeholder">
+                <div class="placeholder-icon">🎓</div>
+              </div>
+            }
             <div class="tutorial-overlay">
               <div class="play-button">&#x25B6;</div>
               <div class="tutorial-info">
-                <span class="lesson-count">{{ tutorial.lessons }} lessons</span>
-                <span class="duration">{{ tutorial.duration }}</span>
+                <span class="lesson-count">Multiple lessons</span>
+                <span class="duration">25 min</span>
               </div>
             </div>
-            <div class="category-badge" [class]="'badge-' + tutorial.category.toLowerCase()">
-              {{ tutorial.category }}
+            <div class="category-badge" [class]="'badge-' + getCategoryFromTitle(tutorial.title).toLowerCase()">
+              {{ getCategoryFromTitle(tutorial.title) }}
             </div>
-            <div class="difficulty-badge" [class]="'difficulty-' + tutorial.difficulty.toLowerCase()">
-              {{ tutorial.difficulty }}
+            <div class="difficulty-badge" [class]="'difficulty-' + getDifficultyFromTitle(tutorial.title).toLowerCase()">
+              {{ getDifficultyFromTitle(tutorial.title) }}
             </div>
           </div>
 
           <div class="tutorial-content">
             <div class="tutorial-meta">
-              <span class="instructor">By {{ tutorial.instructor }}</span>
-              <span class="date">&#x1F4C5; {{ tutorial.date }}</span>
+              <span class="instructor">By Tutorial Expert</span>
+              <span class="date">&#x1F4C5; {{ getFormattedDate(tutorial.publishedAt || tutorial.createdAt) }}</span>
             </div>
             
             <h3 class="tutorial-title">{{ tutorial.title }}</h3>
@@ -74,15 +86,14 @@
             <p class="tutorial-description">{{ tutorial.description }}</p>
             
             <div class="tutorial-tags">
-              @for (tag of tutorial.tags; track tag) {
-                <span class="tag">{{ tag }}</span>
-              }
+              <span class="tag">Game Development</span>
+              <span class="tag">{{ getCategoryFromTitle(tutorial.title) }}</span>
             </div>
             
             <div class="tutorial-footer">
               <div class="stats">
-                <span class="stat">&#x1F4DA; {{ tutorial.lessons }} lessons</span>
-                <span class="stat">&#x23F1; {{ tutorial.duration }}</span>
+                <span class="stat">&#x1F4DA; Multiple lessons</span>
+                <span class="stat">&#x23F1; 25 min</span>
               </div>
               <button class="start-btn">Start Tutorial</button>
             </div>

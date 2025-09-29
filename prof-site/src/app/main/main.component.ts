@@ -130,15 +130,15 @@ export class MainComponent implements OnInit {
   }
 
   navigateToArticle(article: Article) {
-    this.router.navigate(['/article', article.documentId]);
+    this.router.navigate(['/articles', article.documentId]);
   }
 
   navigateToTutorial(tutorial: Tutorial) {
-    this.router.navigate(['/tutorial', tutorial.documentId]);
+    this.router.navigate(['/tutorials', tutorial.documentId]);
   }
 
   navigateToVideo(video: Video) {
-    this.router.navigate(['/video', video.documentId]);
+    this.router.navigate(['/videos', video.documentId]);
   }
 
   navigateToArticles() {

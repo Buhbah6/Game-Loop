@@ -23,64 +23,90 @@
     </section>
 
     <!-- Featured Video -->
-    @if (filteredVideos.length > 0 && filteredVideos[0].featured) {
-      <section class="featured-video">
-        <div class="video-card featured" [routerLink]="['/videos', filteredVideos[0].id]">
-          <div class="video-thumbnail">
-            <div class="thumbnail-placeholder">
-              <div class="play-button-large">&#x25B6;</div>
-              <div class="video-duration">{{ filteredVideos[0].duration }}</div>
-              <div class="featured-badge">Featured</div>
-            </div>
-          </div>
-          <div class="video-info">
-            <h2 class="video-title">{{ filteredVideos[0].title }}</h2>
-            <p class="video-description">{{ filteredVideos[0].description }}</p>
-            <div class="video-meta">
-              <span class="creator">{{ filteredVideos[0].creator }}</span>
-              <span class="stats">{{ formatViews(filteredVideos[0].views) }} • {{ filteredVideos[0].uploadDate }}</span>
-            </div>
-            <div class="video-tags">
-              @for (tag of filteredVideos[0].tags; track tag) {
-                <span class="tag">{{ tag }}</span>
+    @if ((filteredVideos$ | async); as videos) {
+      @if (videos.length > 0) {
+        <section class="featured-video">
+          <div class="video-card featured" 
+               (click)="navigateToVideo(videos[0])"
+               style="cursor: pointer;">
+            <div class="video-thumbnail">
+              @if (videos[0].thumbnail?.data?.url) {
+                <img 
+                  [src]="getVideoImageUrl(videos[0])" 
+                  [alt]="getVideoImageAlt(videos[0])"
+                  class="cover-image"
+                  loading="lazy" />
+              } @else {
+                <div class="thumbnail-placeholder">
+                  <div class="placeholder-icon">🎬</div>
+                </div>
               }
+              <div class="video-overlay">
+                <div class="play-button-large">&#x25B6;</div>
+                <div class="video-duration">30:00</div>
+                <div class="featured-badge">Featured</div>
+              </div>
+            </div>
+            <div class="video-info">
+              <h2 class="video-title">{{ videos[0].title }}</h2>
+              <p class="video-description">Comprehensive video tutorial covering game development concepts and techniques.</p>
+              <div class="video-meta">
+                <span class="creator">Game Dev Expert</span>
+                <span class="stats">1K views • {{ getFormattedDate(videos[0].publishedAt || videos[0].createdAt) }}</span>
+              </div>
+              <div class="video-tags">
+                <span class="tag">Game Development</span>
+                <span class="tag">{{ getCategoryFromTitle(videos[0].title) }}</span>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      }
     }
 
     <!-- Videos Grid -->
     <section class="videos-grid">
-      @for (video of filteredVideos; track video.id; let i = $index) {
-        @if (!video.featured || i > 0) {
-          <div class="video-card" [routerLink]="['/videos', video.id]">
+      @for (video of filteredVideos$ | async; track video.id; let i = $index) {
+        @if (i > 0) {
+          <div class="video-card" 
+               (click)="navigateToVideo(video)"
+               style="cursor: pointer;">
             <div class="video-thumbnail">
-              <div class="thumbnail-placeholder">
+              @if (video.thumbnail?.data?.url) {
+                <img 
+                  [src]="getVideoImageUrl(video)" 
+                  [alt]="getVideoImageAlt(video)"
+                  class="cover-image"
+                  loading="lazy" />
+              } @else {
+                <div class="thumbnail-placeholder">
+                  <div class="placeholder-icon">🎬</div>
+                </div>
+              }
+              <div class="video-overlay">
                 <div class="play-button">&#x25B6;</div>
-                <div class="video-duration">{{ video.duration }}</div>
+                <div class="video-duration">30:00</div>
               </div>
-              <div class="category-badge" [class]="'badge-' + video.category.toLowerCase().replace(' ', '-')">
-                {{ video.category }}
+              <div class="category-badge" [class]="'badge-' + getCategoryFromTitle(video.title).toLowerCase().replace(' ', '-')">
+                {{ getCategoryFromTitle(video.title) }}
               </div>
             </div>
             
             <div class="video-info">
               <h3 class="video-title">{{ video.title }}</h3>
-              <p class="video-description">{{ video.description }}</p>
+              <p class="video-description">Comprehensive video tutorial covering game development concepts and techniques.</p>
               
               <div class="video-meta">
-                <span class="creator">{{ video.creator }}</span>
+                <span class="creator">Game Dev Expert</span>
                 <div class="stats">
-                  <span class="views">&#x1F441; {{ video.views }}</span>
-                  <span class="date">&#x1F4C5; {{ video.uploadDate }}</span>
+                  <span class="views">&#x1F441; 1K</span>
+                  <span class="date">&#x1F4C5; {{ getFormattedDate(video.publishedAt || video.createdAt) }}</span>
                 </div>
               </div>
               
               <div class="video-tags">
-                @for (tag of video.tags; track tag) {
-                  <span class="tag">{{ tag }}</span>
-                }
+                <span class="tag">Game Development</span>
+                <span class="tag">{{ getCategoryFromTitle(video.title) }}</span>
               </div>
             </div>
           </div>

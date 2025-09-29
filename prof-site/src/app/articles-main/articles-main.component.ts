@@ -1,6 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { Observable, BehaviorSubject, combineLatest, of } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
+import { StrapiService } from '../services/strapi.service';
+import { Article } from '../interfaces/strapi.interface';
 
 @Component({
   selector: 'app-articles-main',
@@ -9,85 +13,165 @@ import { RouterModule } from '@angular/router';
   templateUrl: './articles-main.component.html',
   styleUrl: './articles-main.component.scss'
 })
-export class ArticlesMainComponent {
-  articles = [
-    {
-      id: 1,
-      title: 'The Psychology of Player Engagement: What Keeps Gamers Coming Back',
-      excerpt: 'Explore the fundamental principles that keep players hooked and how to implement them in your game design. From reward systems to progression mechanics, discover the psychological triggers that make games addictive.',
-      author: 'Sarah Chen',
-      date: 'Dec 15',
-      readTime: '8 min',
-      category: 'Game Design',
-      tags: ['Psychology', 'Player Engagement', 'Game Design'],
-      featured: true
-    },
-    {
-      id: 2,
-      title: 'Building Immersive Worlds: A Designer\'s Guide',
-      excerpt: 'Learn the secrets behind creating compelling game worlds that players never want to leave. From environmental storytelling to world consistency.',
-      author: 'Marcus Rodriguez',
-      date: 'Dec 12',
-      readTime: '12 min',
-      category: 'World Building',
-      tags: ['World Building', 'Environment Design', 'Storytelling']
-    },
-    {
-      id: 3,
-      title: 'The Art of Balancing Game Mechanics',
-      excerpt: 'Discover how to create perfectly balanced gameplay that challenges without frustrating players. Essential techniques for fine-tuning difficulty curves.',
-      author: 'Alex Thompson',
-      date: 'Dec 10',
-      readTime: '6 min',
-      category: 'Game Balance',
-      tags: ['Game Balance', 'Mechanics', 'Difficulty']
-    },
-    {
-      id: 4,
-      title: 'Indie Game Marketing Strategies That Actually Work',
-      excerpt: 'Essential marketing tips for indie developers to get their games noticed in a crowded market. Proven strategies from successful indie launches.',
-      author: 'Emma Wilson',
-      date: 'Dec 1',
-      readTime: '15 min',
-      category: 'Marketing',
-      tags: ['Marketing', 'Indie Games', 'Business']
-    },
-    {
-      id: 5,
-      title: 'Advanced Shader Techniques for Indie Developers',
-      excerpt: 'Unlock the power of custom shaders to create stunning visual effects on a budget. Step-by-step tutorials for common shader patterns.',
-      author: 'David Kim',
-      date: 'Nov 28',
-      readTime: '20 min',
-      category: 'Programming',
-      tags: ['Shaders', 'Graphics', 'Programming']
-    },
-    {
-      id: 6,
-      title: 'Creating Memorable Characters in Games',
-      excerpt: 'Design principles for crafting characters that resonate with players long after they finish playing. From personality to visual design.',
-      author: 'Lisa Zhang',
-      date: 'Nov 25',
-      readTime: '10 min',
-      category: 'Character Design',
-      tags: ['Character Design', 'Storytelling', 'Art']
-    }
-  ];
+export class ArticlesMainComponent implements OnInit {
+  allArticles$: Observable<Article[]>;
+  filteredArticles$: Observable<Article[]>;
+  
+  // State for filtering
+  private selectedCategorySubject = new BehaviorSubject<string>('All');
+  selectedCategory$ = this.selectedCategorySubject.asObservable();
 
   categories = ['All', 'Game Design', 'Programming', 'Art', 'Marketing', 'Business'];
   selectedCategory = 'All';
 
-  get filteredArticles() {
-    if (this.selectedCategory === 'All') {
-      return this.articles;
-    }
-    return this.articles.filter(article => 
-      article.category === this.selectedCategory || 
-      article.tags.includes(this.selectedCategory)
+  constructor(
+    private strapiService: StrapiService,
+    private router: Router
+  ) {
+    // Load all articles from Strapi
+    this.allArticles$ = this.strapiService.getArticles({
+      pagination: { limit: 100 }
+    }).pipe(
+      map(articles => {
+        console.log('Articles loaded:', articles);
+        // If no articles from Strapi or empty array, use mock data
+        if (!articles || articles.length === 0) {
+          console.log('No articles from Strapi, using mock data');
+          return this.getMockArticles() as Article[];
+        }
+        return articles;
+      }),
+      catchError(() => {
+        console.log('Error loading articles, using mock data');
+        return of(this.getMockArticles() as Article[]);
+      })
     );
+
+    // Filter articles based on selected category
+    this.filteredArticles$ = combineLatest([
+      this.allArticles$,
+      this.selectedCategory$
+    ]).pipe(
+      map(([articles, category]) => {
+        if (category === 'All') {
+          return articles;
+        }
+        // For now, we'll filter by title content since Strapi articles may not have category field
+        return articles.filter(article => 
+          article.title.toLowerCase().includes(category.toLowerCase()) ||
+          article.summary?.toLowerCase().includes(category.toLowerCase())
+        );
+      })
+    );
+  }
+
+  ngOnInit() {
+    console.log('ArticlesMainComponent initialized');
   }
 
   selectCategory(category: string) {
     this.selectedCategory = category;
+    this.selectedCategorySubject.next(category);
+  }
+
+  navigateToArticle(article: Article) {
+    this.router.navigate(['/articles', article.documentId]);
+  }
+
+  getFormattedDate(dateString: string): string {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', { 
+      month: 'short', 
+      day: 'numeric'
+    });
+  }
+
+  getStrapiImageUrl(url: string): string {
+    if (!url) return '';
+    // If URL is already complete, return as is
+    if (url.startsWith('http')) {
+      return url;
+    }
+    // If URL is relative, prepend Strapi base URL
+    return `http://localhost:1337${url}`;
+  }
+
+  getArticleImageUrl(article: Article): string {
+    return article.coverImage?.url ? this.getStrapiImageUrl(article.coverImage.url) : '';
+  }
+
+  getArticleImageAlt(article: Article): string {
+    return article.coverImage?.alternativeText || article.title;
+  }
+
+  private getMockArticles(): any[] {
+    return [
+      {
+        id: 1,
+        documentId: 'article-1',
+        createdAt: '2024-12-15T10:00:00Z',
+        updatedAt: '2024-12-15T10:00:00Z',
+        publishedAt: '2024-12-15T10:00:00Z',
+        title: 'The Psychology of Player Engagement: What Keeps Gamers Coming Back',
+        slug: 'psychology-player-engagement',
+        summary: 'Explore the fundamental principles that keep players hooked and how to implement them in your game design. From reward systems to progression mechanics, discover the psychological triggers that make games addictive.',
+        body: 'Player engagement is the holy grail of game development...'
+      },
+      {
+        id: 2,
+        documentId: 'article-2',
+        createdAt: '2024-12-12T10:00:00Z',
+        updatedAt: '2024-12-12T10:00:00Z',
+        publishedAt: '2024-12-12T10:00:00Z',
+        title: 'Building Immersive Worlds: A Designer\'s Guide',
+        slug: 'building-immersive-worlds',
+        summary: 'Learn the secrets behind creating compelling game worlds that players never want to leave. From environmental storytelling to world consistency.',
+        body: 'World building is an essential aspect of game development...'
+      },
+      {
+        id: 3,
+        documentId: 'article-3',
+        createdAt: '2024-12-10T10:00:00Z',
+        updatedAt: '2024-12-10T10:00:00Z',
+        publishedAt: '2024-12-10T10:00:00Z',
+        title: 'The Art of Balancing Game Mechanics',
+        slug: 'art-balancing-game-mechanics',
+        summary: 'Discover how to create perfectly balanced gameplay that challenges without frustrating players. Essential techniques for fine-tuning difficulty curves.',
+        body: 'Game balance is crucial for player satisfaction...'
+      },
+      {
+        id: 4,
+        documentId: 'article-4',
+        createdAt: '2024-12-01T10:00:00Z',
+        updatedAt: '2024-12-01T10:00:00Z',
+        publishedAt: '2024-12-01T10:00:00Z',
+        title: 'Indie Game Marketing Strategies That Actually Work',
+        slug: 'indie-game-marketing-strategies',
+        summary: 'Essential marketing tips for indie developers to get their games noticed in a crowded market. Proven strategies from successful indie launches.',
+        body: 'Marketing an indie game requires creativity and strategy...'
+      },
+      {
+        id: 5,
+        documentId: 'article-5',
+        createdAt: '2024-11-28T10:00:00Z',
+        updatedAt: '2024-11-28T10:00:00Z',
+        publishedAt: '2024-11-28T10:00:00Z',
+        title: 'Advanced Shader Techniques for Indie Developers',
+        slug: 'advanced-shader-techniques',
+        summary: 'Unlock the power of custom shaders to create stunning visual effects on a budget. Step-by-step tutorials for common shader patterns.',
+        body: 'Shaders can transform the visual appeal of your game...'
+      },
+      {
+        id: 6,
+        documentId: 'article-6',
+        createdAt: '2024-11-25T10:00:00Z',
+        updatedAt: '2024-11-25T10:00:00Z',
+        publishedAt: '2024-11-25T10:00:00Z',
+        title: 'Creating Memorable Characters in Games',
+        slug: 'creating-memorable-characters',
+        summary: 'Design principles for crafting characters that resonate with players long after they finish playing. From personality to visual design.',
+        body: 'Character design goes beyond just visual appeal...'
+      }
+    ];
   }
 }

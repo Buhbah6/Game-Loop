@@ -24,28 +24,31 @@
 
     <!-- Articles Grid -->
     <section class="articles-grid">
-      @for (article of filteredArticles; track article.id) {
+      @for (article of filteredArticles$ | async; track article.id) {
         <article 
           class="article-card"
-          [class.featured]="article.featured"
-          [routerLink]="['/articles', article.id]">
+          [class.featured]="article.id === 1"
+          (click)="navigateToArticle(article)"
+          style="cursor: pointer;">
           
           <div class="article-image">
-            @if (article.category === 'Programming') {
-              <div class="code-preview">
-                <div class="code-line">function gameLoop() {{ '{' }}</div>
-                <div class="code-line">  update();</div>
-                <div class="code-line">  render();</div>
-                <div class="code-line">{{ '}' }}</div>
-              </div>
+            @if (article.coverImage?.url) {
+              <img 
+                [src]="getArticleImageUrl(article)" 
+                [alt]="getArticleImageAlt(article)"
+                class="cover-image"
+                loading="lazy" />
             } @else {
               <div class="image-placeholder">
                 <span class="category-icon">
-                  @switch (article.category) {
-                    @case ('Game Design') { <span class="material-icons">sports_esports</span> }
-                    @case ('Art') { <span class="material-icons">palette</span> }
-                    @case ('Marketing') { 📈 }
-                    @default { 💡 }
+                  @if (article.title.toLowerCase().includes('design')) { 
+                    <span class="material-icons">sports_esports</span> 
+                  } @else if (article.title.toLowerCase().includes('art') || article.title.toLowerCase().includes('character')) { 
+                    <span class="material-icons">palette</span> 
+                  } @else if (article.title.toLowerCase().includes('marketing')) { 
+                    📈 
+                  } @else { 
+                    💡 
                   }
                 </span>
               </div>
@@ -54,26 +57,24 @@
 
           <div class="article-content">
             <div class="article-tags">
-              <span class="tag tag-category">{{ article.category }}</span>
-              @if (article.featured) {
+              <span class="tag tag-category">Article</span>
+              @if (article.id === 1) {
                 <span class="tag tag-featured">Featured</span>
               }
             </div>
             
             <h2 class="article-title">{{ article.title }}</h2>
             
-            <p class="article-excerpt">{{ article.excerpt }}</p>
+            <p class="article-excerpt">{{ article.summary }}</p>
             
             <div class="article-meta">
-              <span class="author">By {{ article.author }}</span>
-              <span class="date">&#x1F4C5; {{ article.date }}</span>
-              <span class="read-time">&#x23F1; {{ article.readTime }}</span>
+              <span class="author">By Game Dev Expert</span>
+              <span class="date">&#x1F4C5; {{ getFormattedDate(article.publishedAt || article.createdAt) }}</span>
+              <span class="read-time">&#x23F1; 5 min read</span>
             </div>
             
             <div class="article-tags-list">
-              @for (tag of article.tags; track tag) {
-                <span class="tag tag-small">{{ tag }}</span>
-              }
+              <span class="tag tag-small">Game Development</span>
             </div>
           </div>
         </article>

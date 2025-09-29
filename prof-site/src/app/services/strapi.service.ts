@@ -93,12 +93,22 @@ export class StrapiService {
       headers: headers 
     }).pipe(
       map(response => {
-        console.log('Strapi response for', endpoint, ':', response);
+        console.log('✅ Strapi SUCCESS for', endpoint, ':', response);
         return response;
       }),
       catchError(error => {
-        console.error('Strapi API error for', endpoint, ':', error);
-        console.warn('Falling back to mock data');
+        console.error('❌ Strapi API error for', endpoint);
+        console.error('Error details:', error);
+        console.error('Status:', error.status);
+        console.error('Message:', error.message);
+        
+        if (error.status === 404) {
+          console.warn('🔍 Article not found in Strapi - this might be a document ID issue');
+        } else if (error.status === 0) {
+          console.warn('🚫 Cannot connect to Strapi server - is it running on http://localhost:1337?');
+        }
+        
+        console.warn('📋 Falling back to mock data');
         this.useMockData = true;
         return this.getMockData<T>(endpoint);
       })
@@ -117,10 +127,16 @@ export class StrapiService {
   }
 
   getArticle(id: string): Observable<Article> {
+    console.log('StrapiService.getArticle called with id:', id);
+    console.log('Full URL will be:', `${this.apiUrl}/articles/${id}`);
+    
     return this.get<Article>(`articles/${id}`, {
       populate: '*'
     }).pipe(
-      map(response => response.data)
+      map(response => {
+        console.log('StrapiService.getArticle response:', response);
+        return response.data;
+      })
     );
   }
 
